@@ -3,23 +3,50 @@
 <head>
     <meta charset="utf-8" />
     <title> Imbiss </title>
-
+    <link rel="stylesheet" href="Style.css" />
 </head>
 <body>
-    <header>
-        <h1>Imbiss</h1>
-        <h3>Bestellseite</h3>
+    <header >
+        <h1 class="titel">Mocks Thaiessen</h1>
+        <h3 class="titel">Bestellseite</h3>
+        
+
     </header>
     <main>
-        <a href="Küchenseite.html" title="Küchenseite" > Zur Küche </a>
         <div>
-            <p class="Bestellung">BestellungX</p>
-            <img src="" alt="Bestellung">
+            <input type="button" value="Zur Küche" id="linkküche">
+            <div class="bestellungen">
+                <img class="bestellung" src="Bilder/Notizblock.jpg" alt="Bestellung">
+                <img class="bestellung" src="Bilder/Notizblock.jpg" alt="Bestellung"><br>
+                <img class="bestellung" src="Bilder/Notizblock.jpg" alt="Bestellung">
+                <img class="bestellung" src="Bilder/Notizblock.jpg" alt="Bestellung"><br>
+                <img class="bestellung" src="Bilder/Notizblock.jpg" alt="Bestellung">
+                <img class="bestellung" src="Bilder/Notizblock.jpg" alt="Bestellung"><br>
+           
+            </div>
+            
+            <a  href="Aufnehmeseite.html" title="Aufnehmeseite"> Bestellung Aufnehmen </a> <br>
+            <a  href="Küchenseite.html" title="Küchenseite" > Zur Küche </a>
         </div>
-        <a href="Aufnehmeseite.html" title="Aufnehmeseite" > Bestellung Aufnehmen </a>
+        <div class="bg-right">
+            <div class="vorhanden">
+                <h2 id="vorhandentitel">Vorhanden</h2>
+                <p class="vorhanden-liste">Frühlingsrollen: 20</p> <br>
+                <p class="vorhanden-liste">Frühlingsecken: 15</p>  <br>
+                <p class="vorhanden-liste">Wantan: 30</p><br>
+                <p class="vorhanden-liste">Muslitos: 5</p><br>
+                <p class="vorhanden-liste">Phad Thai: 4</p><br>
+                <p class="vorhanden-liste">Tagesessen: 1</p><br>
+                <input type="button" value="Bestellung Aufnehmen" id="bestellen" >
+            </div>
+        </div>
+
+        
+
+        
     </main>
     <footer>
-        Hallo
+        
     </footer>
 </body>
 
