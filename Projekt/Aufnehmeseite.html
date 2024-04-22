@@ -3,30 +3,33 @@
 <html lang="de">
     <head>
         <meta charset="utf-8" />
+        <link rel="stylesheet" href="Style.css" />
     <title> Aufnehmeseite </title>
     </head>
     <body>
         <header>
-            <h1>Mocks Thaiessen</h1>
-            <h3>Aufnehmeseite</h3>
+            <h1 >Mocks Thaiessen</h1>
+            <h3 >Aufnehmeseite</h3>
         </header>
         <main>
-            <div>
-                <h3>Bestellung Aufnehmen</h3>
-                <label>Frühlingsrollen: </label>
-                <input type="number" /><br>
-                <label>Frühlingsecken: </label>
-                <input type="number" /><br>
-                <label>Wantan: </label>
-                <input type="number" /><br>
-                <label>Muslitos: </label>
-                <input type="number" /><br>
-                <label>Phad Thai: </label>
-                <input type="number" /><br>
-                <label>Tagesessen: </label>
-                <input type="number" /><br>
-                <input type="button" name="Aufnehmen"/>
-                
+            <a href="Index.html"><input type="button" value="Abbrechen" id="cancle"></a>
+            <div class="box">
+                <div class="auswahl">
+                    <h3 id="auswahltitel">Bestellung Aufnehmen</h3>
+                    <label class="auswahl-liste">Frühlingsrollen: </label>
+                    <input type="number" class="aufnehmen"/><br>
+                    <label class="auswahl-liste">Frühlingsecken: </label>
+                    <input type="number" class="aufnehmen"/><br>
+                    <label class="auswahl-liste">Wantan: </label>
+                    <input type="number" class="aufnehmen"/><br>
+                    <label class="auswahl-liste">Muslitos: </label>
+                    <input type="number" class="aufnehmen"/><br>
+                    <label class="auswahl-liste">Phad Thai: </label>
+                    <input type="number" class="aufnehmen"/><br>
+                    <label class="auswahl-liste">Tagesessen: </label>
+                    <input type="number" class="aufnehmen"/><br>
+                    <a href="Index.html"><input type="button" value="Aufnehmen" id="save"></a>
+                </div>
             </div>
         </main>
     </body>
