@@ -37,7 +37,9 @@ body {
     text-align: center;
     transform: translate(60px, 20px);
     line-height: 0%;
-    display: inline-block; 
+    display: inline-block;
+    
+    
 }
 
 .vorhanden-liste {
@@ -81,31 +83,4 @@ body {
     width: 150px;
     height: 40px;
     background-color: #2E7D32;
-}
-
-
-
-.box {
-    width: 20%;
-    height: 90%;
-    border: 10px solid #4A148C;
-    background-image: radial-gradient(
-      circle closest-side at center,
-    #5E35B1,
-      #5E35B1,
-      #5E35B1
-    );
-    position: fixed;
-    top: 1;
-    bottom: 0;
-
-    left: 35%;
-    right: 0;
-    z-index: 0;
-}
-
-.aufnehmen {
-    width: 40px;
-    background-color: #3c1363;
-    color: white;
 }
