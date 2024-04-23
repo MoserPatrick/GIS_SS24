@@ -5,9 +5,14 @@ header {
 body {
     background-color: blueviolet;
     z-index: -1;
-    
+    font-size: 1em;
 }
-
+@media only screen and (max-height:850px){
+    body{
+        font-size: 80%;
+       
+    }
+}
 h1{
     font-size: 400%;
     text-align: center;
@@ -32,7 +37,7 @@ h3{
     );
     position: fixed;
     top: 16.3%;
-    bottom: 0;
+    bottom: 0%;
     left: 65%;
     right: 0;
     z-index: 0;
@@ -43,6 +48,7 @@ h3{
     position: absolute;
     left: 33%;
     top: 5%;
+    bottom: 1%;
     width: 35%;
     height: 100%;   
 }
@@ -295,4 +301,67 @@ h3{
     background-color: #028d02;
     padding-right: 7%;
     transform: translate(-30%,37%);
+}
+
+@media only screen and (max-width: 1300px){
+    body{
+        font-size: 90%;
+        color: red;
+    }
+    .bestellung{
+        width: 50%;
+        height: 90%;
+    }
+}
+@media only screen and (max-height:750px){
+    body{
+        color: green;
+    }
+    .bestellung{
+        width: 50%;
+        height: 90%;
+    }
+    #vorhandentitel{
+        font-size: 250%;
+        margin: 1%;
+    }
+    .vorhanden-liste{
+        margin: 1%;
+    }
+    .auswahl-liste{
+        padding: 1%;
+    }
+    #linkküche{
+        top: 80px;
+    }
+    #küchetitel{
+        font-size: 250%;
+    }
+    .küche-liste{
+        margin: 2%;
+        padding: 1%;
+    }
+}
+@media only screen and (max-height: 650px){
+    body{
+        font-size: 70%;
+        color: purple;
+    }
+    .bestellung{
+        width: 50%;
+        height: 90%;
+    }
+    .vorhanden-liste{
+        margin: 0%;
+        padding: 2%;
+    }
+}
+@media only screen and (max-width:1200px){
+    .zubereitungbox{
+        left: 0%;
+        width: 120%;
+    }
+    .fertig{
+        height: 16%;
+    }
 }
