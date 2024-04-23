@@ -40,11 +40,19 @@ h3{
 
 .vorhanden {
     text-align: center;
+<<<<<<< HEAD
     position: absolute;
     left: 33%;
     top: 5%;
     width: 35%;
     height: 100%;   
+=======
+    transform: translate(60px, 20px);
+    line-height: 0%;
+    display: inline-block;
+    
+    
+>>>>>>> parent of fb9065c (verwurf)
 }
 
 .vorhanden-liste {
@@ -99,6 +107,7 @@ h3{
 
 #linkküche {
     position: absolute;
+<<<<<<< HEAD
     left: 22%;
     top: 16.2%;
     width: 20%;
@@ -295,4 +304,11 @@ h3{
     background-color: #028d02;
     padding-right: 7%;
     transform: translate(-30%,37%);
+=======
+    left: 373px;
+    top: 16%;
+    width: 150px;
+    height: 40px;
+    background-color: #2E7D32;
+>>>>>>> parent of fb9065c (verwurf)
 }
