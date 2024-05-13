@@ -1,11 +1,22 @@
 
 var save = document.getElementById("save");
-console.log(document.getElementById("save"));
+
+const vorhanden = [0, 0, 0, 0, 0, 0];
+const namen = ["Frühlingsrollen", "Frühlingsecken", "Wantan", "Muslitos", "Phad Thai", "Tagesessen"];
+
+
+
+
 save.addEventListener("click", addNotiz);
-const liste = ["Fühlingsrollen", "Frühlingsecken", "Wantan", "Muslitos", "Phad Thai", "Tagesessen"];
 
 function addNotiz(event){
-    console.log(Funkt9ion);
+    
+    var aufnehmen = document.getElementsByClassName("aufnehmen");
+    for(i = 0; i < aufnehmen.length; i++){
+        localStorage.setItem(namen[i], aufnehmen[i].value);
+    }
+    
+
     var notiz = document.createElement("div");
     document.Bestellungen.appendChild(notiz);
     notiz.className = "notiz";
@@ -20,12 +31,11 @@ function addNotiz(event){
     document.notiz.appendChild(notizliste);
     notizliste.className = "notizliste";
 
-    for(var i; i < liste.length - 1; i++){
+    for(i = 0; i < aufnehmen.length - 1; i++){
     var notizTeil = document.createElement("p");
-    notizTeil.textContent = liste(i) + ": " + document.getElementsByClassName("aufnehmen"[i]);
+    notizTeil.textContent = namen[i] + ": " + aufnehmen[i].value;
     notizTeil.className = "notiztext";
     document.notiz.appendChild(notizTeil);
-    console.log(Loop);
     }
 
     var abschließen = document.createElement("input")
@@ -33,7 +43,8 @@ function addNotiz(event){
     abschließen.id = "abschließen";
     abschließen.addEventListener("click", abschließnotiz);
     notiz.appendChild(abschließen);
-}
+    
+}   
 
 function löschNotiz(event){
 
@@ -41,4 +52,5 @@ function löschNotiz(event){
 function abschließnotiz(event){
 
 }
+
 
