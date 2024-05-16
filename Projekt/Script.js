@@ -14,12 +14,14 @@ save.addEventListener("click", addNotiz);
 
 function addNotiz(event){
     let counter = Number(localStorage.getItem("counter"));
+
     if(counter == 0){
         const ausstehend = {Frühlingsrollen: 0, Frühlingsecken: 0, Wantan: 0, Muslitos: 0, PhadThai: 0, Tagesessen: 0};
         let ausstehendString = JSON.stringify(ausstehend);
         localStorage.setItem("Ausstehend", ausstehendString);
     }
     counter += 1;
+   
     localStorage.setItem("counter", counter);
 
     let aufnehmen = document.getElementsByClassName("aufnehmen");
