@@ -42,7 +42,7 @@ h3{
     z-index: 0;
 }
 
-.vorhanden {
+#vorhanden {
     text-align: center;
     position: absolute;
     left: 33%;
@@ -83,7 +83,7 @@ h3{
 }
 
 
-.bestellungen {
+#notizen {
     position: absolute;
     left: 10%;
     top: 22%;
