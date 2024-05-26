@@ -82,7 +82,7 @@ function addNotiz(event){
     localStorage.setItem("Ausstehend", ausstehendString);
 */
     //seite wechseln
-   // window.location = "index.html";
+   window.location = "index.html";
 
     
 }   

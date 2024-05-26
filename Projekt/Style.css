@@ -317,7 +317,6 @@ h3{
 
 #küchetitel {
     color: #29bb30;
-    
     font-size: 300%;
     margin: 2%;
     
@@ -326,7 +325,6 @@ h3{
 #zubereitungbox {
     width: 50%;
     height: 81.7%;
-  
     position: absolute;
     top: 23%;
     bottom: 0;
@@ -336,6 +334,7 @@ h3{
 }
 
 .cluster{
+   
     transform: translate(0,0);
     transition: transform 0.5s ease;
 }
@@ -393,29 +392,29 @@ h3{
 #add {
     width: 10%;
     z-index: -1;
-    font-size: 400%;
-    transform: translate(-15%,37%);
+    font-size: 500%;
+    transform: translate(-5%,37%);
     background-color: #d6250e;
 }
 #add:hover {
     background-color: #e93922;
     padding-right: 7%;
-    transform: translate(-25%,37%);
+    transform: translate(-20%,37%);
     width: 15%;
 }
 
 .fertig {
     width: 10%;
     z-index: -1;
-    font-size: 400%;
-    transform: translate(-15%,37%);
+    font-size: 500%;
+    transform: translate(-3%,37%);
     background-color: #226422;
 }
 .fertig:hover {
     background-color: #028d02;
     padding-right: 7%;
-    transform: translate(-25%,37%);
-    width: 15%;
+    transform: translate(-15%,37%);
+    width: 13%;
 }
 
 
