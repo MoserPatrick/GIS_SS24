@@ -125,6 +125,7 @@ function bestellungen(event){
        
     
         //mit objekten arbeiten
+        let ready = true;
         
         for(i = 0; i < Object.keys(aufschriebObj).length; i++){
            
@@ -135,6 +136,9 @@ function bestellungen(event){
                 notizliste.appendChild(notizTeil);
                 notizliste.appendChild(document.createElement("br"));
                 
+                if(vorhanden[i] < Object.values(aufschriebObj)[i]){
+                    ready = false;
+                }
             }
         }
     
@@ -148,6 +152,13 @@ function bestellungen(event){
         
         // zu der Liste der Austehenden hinzufügen
         
+        /*if(ready == true){
+            let anzeige = document.createElement("p");
+            notiz.appendChild(anzeige);
+            anzeige.textContent = "Bereit";
+            anzeige.className = "ready";
+        }*/
+
     }
     
     }
