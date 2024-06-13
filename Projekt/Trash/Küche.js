@@ -5,7 +5,7 @@ anzahl = localStorage.getItem("Anzahl");
 
 add.addEventListener("click", addbearbeitung);
 
-            
+
             ladenAusstehend();
         
         
@@ -22,10 +22,10 @@ add.addEventListener("click", addbearbeitung);
             cluster.className = "cluster";
             cluster.id = "cluster" + j;
         
-            /*let timer = document.createElement("p");
+            let timer = document.createElement("p");
             cluster.appendChild(timer);
             timer.textContent = "3:00";
-            timer.className = "zubereitung-timer";*/
+            timer.className = "zubereitung-timer";
         
             let savewas = document.createElement("p");
             cluster.appendChild(savewas);
@@ -74,10 +74,10 @@ function addbearbeitung(event){
     cluster.className = "cluster";
     cluster.id = "cluster" + anzahl;
 
-    /*let timer = document.createElement("p");
+    let timer = document.createElement("p");
     cluster.appendChild(timer);
     timer.textContent = "3:00";
-    timer.className = "zubereitung-timer";*/
+    timer.className = "zubereitung-timer";
 
     let savewas = document.createElement("p");
     cluster.appendChild(savewas);
