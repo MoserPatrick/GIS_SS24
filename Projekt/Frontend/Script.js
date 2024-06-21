@@ -1,19 +1,26 @@
 
 var save = document.getElementById("save");
 
+//const namen = ["Fruehlingsrollen", "Fruehlingsecken", "Wantan", "Muslitos", "PhadThai", "Tagesessen"];
+const aufschrieb = {Art: "Bestellung", Frühlingsrollen: 60, Frühlingsecken: 0, Wantan: 0, Muslitos: 0, PhadThai: 0, Tagesessen: 0};
 
-const namen = ["Fruehlingsrollen", "Fruehlingsecken", "Wantan", "Muslitos", "PhadThai", "Tagesessen"];
-const aufschrieb = {Frühlingsrollen: 60, Frühlingsecken: 0, Wantan: 0, Muslitos: 0, PhadThai: 0, Tagesessen: 0};
+async function requestTextWithGET(url) {
+    const response = await fetch(url);
+    const text = await response.text();
+    return text;
+  }
 
-
-
-
-
+async function sendJSONStringWithPOST(url, jsonString) {
+    const response = await fetch(url, {
+      method: 'POST',
+      body: jsonString,
+    });
+  }
 
 save.addEventListener("click", addNotiz);
 
 function addNotiz(event){
-    let counter = Number(localStorage.getItem("counter"));
+   /*let counter = Number(localStorage.getItem("counter"));
 
     if(counter == 0){
         const ausstehend = {Frühlingsrollen: 0, Frühlingsecken: 0, Wantan: 0, Muslitos: 0, PhadThai: 0, Tagesessen: 0};
@@ -22,10 +29,8 @@ function addNotiz(event){
     }
     counter += 1;
    
-    localStorage.setItem("counter", counter);
+    localStorage.setItem("counter", counter);*/
 
-    let aufnehmen = document.getElementsByClassName("aufnehmen");
-    
     /*
     let i = 0;
     aufschrieb.Frühlingsrollen = aufnehmen[i].value;
@@ -47,25 +52,29 @@ function addNotiz(event){
         i++;
         console.log(value);
     }   */
-    for(i = 0; i < 6; i++){
+
+    let aufnehmen = document.getElementsByClassName("aufnehmen");
+
+    for(i = 1; i < 7; i++){
         let key = Object.keys(aufschrieb)[i];
         aufschrieb[key] = Number(aufnehmen[i].value);
     }   
     
-    	
-    let aufschriebString = JSON.stringify(aufschrieb);
-    localStorage.setItem("Bestellung "+ counter, aufschriebString);
+    sendJSONStringWithPOST("http://localhost:3000/Bestellungen", JSON.stringify(aufschrieb));
+    //let aufschriebString = JSON.stringify(aufschrieb);
+    //localStorage.setItem("Bestellung "+ counter, aufschriebString);
 
     //zu ausstehen hinzufügen
-    const ausstehend = JSON.parse(localStorage.getItem("Ausstehend"));
-    for(i = 0; i < 6; i++){
+    //const ausstehend = JSON.parse(localStorage.getItem("Ausstehend"));
+    const ausstehend = requestTextWithGET("http://localhost:3000/Ausstehend");
+    for(i = 1; i < 7; i++){
         let key = Object.keys(aufschrieb)[i];
         let key2 = Object.keys(ausstehend)[i];
         ausstehend[key2] += aufschrieb[key];
-
     } 
-    let ausstehendString = JSON.stringify(ausstehend);
-    localStorage.setItem("Ausstehend", ausstehendString);
+    sendJSONStringWithPOST("http://localhost:3000/Ausstehend", JSON.stringify(ausstehend));
+    //let ausstehendString = JSON.stringify(ausstehend);
+    //localStorage.setItem("Ausstehend", ausstehendString);
 /*
     ausstehend.Frühlingsrollen += aufschrieb.Frühlingsrollen;
     ausstehend.Frühlingsecken += aufschrieb.Frühlingsecken;

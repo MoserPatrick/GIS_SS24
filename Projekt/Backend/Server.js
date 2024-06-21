@@ -1,35 +1,81 @@
 const http = require('http');
 const fs = require("fs");
-const express = require("express");
+method = request.method;
 
 const hostname = '127.0.0.1'; // localhost
 const port = 3000;
-const app = express();
 
-app.use(express.json());
-app.use(express.static("Frontend"));
 
 const server = http.createServer((request, response) => {
   response.statusCode = 200;
-  response.setHeader('Content-Type', 'text/HTML');
-  //response.setHeader('Access-Control-Allow-Origin', '*'); // on CORS error
+  let jsonString = 'Bestellung';
+  response.setHeader('Content-Type', 'text/JSON');
+  response.setHeader('Access-Control-Allow-Origin', '*'); // on CORS error
   const url = new URL(request.url || '', `http://${request.headers.host}`);
+  // Es fehlen noch Delete responses
   switch (url.pathname) {
-    case '/Bestellseite':
+    case '/Bestellungen':
       html = fs.readFileSync("./Index.html")
       response.write(html);
       break;
-    case '/Aufnehmeseite':
-      response.write('Hier ist was du suchst: ' + url.searchParams.get('item'));
+    
+    case '/Bestellung':
+      // give one spezific with id 
+      html = fs.readFileSync("./Index.html")
+      response.write(html);
+      break; 
+
+    case method === "POST" && '/Bestellungen':
+      jsonString = '';
+      request.on('data', (data) => {
+        jsonString += data;
+      });
+      request.on('end', () => {
+        console.log(JSON.parse(jsonString));
+      });
       break;
-    case '/Kuechenseite':
+
+    case '/Bearbeitung':
       response.write('Kochen und so');
       break;
-    case '/Style':
-      response.writeHeader('Content-Type', 'text/css');
-      css = fs.readFileSync("./Style.css")
-      response.end(css);
+
+    case  method === "POST" && '/Bearbeitung':
+      jsonString = '';
+      request.on('data', (data) => {
+        jsonString += data;
+      });
+      request.on('end', () => {
+        console.log(JSON.parse(jsonString));
+      });
       break;
+
+      case '/Ausstehend':
+        response.write('Kochen und so');
+        break;
+  
+      case  method === "PATCH" && '/Ausstehend':
+        jsonString = '';
+        request.on('data', (data) => {
+          jsonString += data;
+        });
+        request.on('end', () => {
+          console.log(JSON.parse(jsonString));
+        });
+        break;
+
+        case '/Vorhanden':
+        response.write('Kochen und so');
+        break;
+  
+      case  method === "PATCH" && '/Vorhanden':
+        jsonString = 'Vorhanden';
+        request.on('data', (data) => {
+          jsonString += data;
+        });
+        request.on('end', () => {
+          console.log(JSON.parse(jsonString));
+        });
+        break;
     default:
       response.statusCode = 404;
   }

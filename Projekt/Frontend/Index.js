@@ -1,9 +1,9 @@
 
 //const namen = ["Frühlingsrollen", "Frühlingsecken", "Wantan", "Muslitos", "PhadThai", "Tagesessen"];
 //const vorhanden = {Frühlingsrollen: 0, Frühlingsecken: 0, Wantan: 0, Muslitos: 0, PhadThai: 0, Tagesessen: 0};
-counter = localStorage.getItem("counter");
-
-
+//counter = localStorage.getItem("counter");
+const sqlite3 = require('sqlite3').verbose();
+const db = new sqlite3.Database('example.db');
 
 // laden von Vorhanden
     vorhandenfunc();
@@ -14,11 +14,30 @@ counter = localStorage.getItem("counter");
     
 
 
+    async function requestTextWithGET(url) {
+        const response = await fetch(url);
+        const text = await response.text();
+        return text;
+      }
+    
+    async function sendJSONStringWithPOST(url, jsonString) {
+        const response = await fetch(url, {
+          method: 'POST',
+          body: jsonString,
+        });
+      }
+
+    async function deleteBestellung(url) {
+        const response = await fetch(url);
+        const text = await response.text();
+        return text;
+      }
 
     function löschNotiz(event){
-
-        let ausstehend = JSON.parse(localStorage.getItem("Ausstehend"));
-        let target =  JSON.parse(localStorage.getItem("Bestellung " + event.target.id));
+        let ausstehend = JSON.parse(requestTextWithGET("http://localhost:3000/Ausstehend"));
+       // let ausstehend = JSON.parse(localStorage.getItem("Ausstehend"));
+        //let target =  JSON.parse(localStorage.getItem("Bestellung " + event.target.id));
+        let target = JSON.parse(requestTextWithGET("http://localhost:3000/Bestellung", event.target.id));
 
         for(i = 0; i < 6; i++){
             let key = Object.keys(target)[i];
@@ -31,20 +50,22 @@ counter = localStorage.getItem("counter");
             ausstehend[key] -= target[key];
         }
 
-        let ausstehendString = JSON.stringify(ausstehend);
-        localStorage.setItem("Ausstehend", ausstehendString);
+        //let ausstehendString = JSON.stringify(ausstehend);
+        //localStorage.setItem("Ausstehend", ausstehendString);
+        sendJSONStringWithPOST("http://localhost:3000/Vorhanden", JSON.stringify(vorhanden));
 
-        localStorage.removeItem("Bestellung " + event.target.id);
-        console.log(event.target.id);
+        //localStorage.removeItem("Bestellung " + event.target.id);
+        deleteBestellung("http://localhost:3000/Bestellung");
         
         
        bestellungen();
     }
     function abschließnotiz(event){
         
-        let target = JSON.parse(localStorage.getItem("Bestellung " + event.target.id));
+        //let target = JSON.parse(localStorage.getItem("Bestellung " + event.target.id));
+        let target = JSON.parse(requestTextWithGET("http://localhost:3000/Bestellung", event.target.id));
         
-        let vorhanden = JSON.parse(localStorage.getItem("Vorhanden"));
+        let vorhanden = JSON.parse(requestTextWithGET("http://localhost:3000/Vorhanden"));
         let ready = true;
 
         for(i = 0; i < 6; i++){
@@ -61,11 +82,13 @@ counter = localStorage.getItem("counter");
 
         
         
-        let vorhandenString = JSON.stringify(vorhanden);
-        localStorage.setItem("Vorhanden", vorhandenString);
+        //let vorhandenString = JSON.stringify(vorhanden);
+        //localStorage.setItem("Vorhanden", vorhandenString);
+        sendJSONStringWithPOST("http://localhost:3000/Vorhanden", JSON.stringify(vorhanden));
 
-        localStorage.removeItem("Bestellung " + event.target.id);
-        
+        //localStorage.removeItem("Bestellung " + event.target.id);
+        //Delete Func
+        deleteBestellung("http://localhost:3000/Bestellung");
 
         bestellungen();
         
@@ -85,30 +108,32 @@ function bestellungen(event){
         let bestellungen = document.getElementById("bestellungen");
         notizen.id = "notizen";
         bestellungen.appendChild(notizen);
-    for(j = 1; j <= counter; j++) {
 
-        if(JSON.parse(localStorage.getItem("Bestellung " + j)) != null){
-        let aufschriebObj = JSON.parse(localStorage.getItem("Bestellung " + j));
+    //let anz = db.get('SELECT COUNT FROM Auswahl WHERE Art = "Bestellung"');
+    //let target = db.get('SELECT columns FROM Auswahl ORDER BY row.id WHERE Art = "Bestellung"');
+    //for(j = 1; j <= anz; j++) {
+    db.each('Select * FROM Auswahl WHERE Art = "Bestellungen"', (err, row) => {
+        //if(JSON.parse(localStorage.getItem("Bestellung " + j)) != null){
+        let aufschriebObj = JSON.parse(row);
         
         let empty = true;
     
-        for(l = 0; l < Object.keys(aufschriebObj).length; l++){
+        for(l = 1; l < Object.keys(aufschriebObj).length; l++){
             if(Object.values(aufschriebObj)[l] > 0){
                 empty = false;
             }
         }
         if(empty == false){
         
-       
         let notiz = document.createElement("div");
         notizen.appendChild(notiz);
         notiz.className = "notiz";
-        notiz.id = "notiz" + counter;
+        notiz.id = "notiz" + row.id;
     
         let löschen = document.createElement("input")
         löschen.value = "X";
         löschen.className = "löschen";
-        löschen.id = j;
+        löschen.id = row.id;
         löschen.type = "button";
         löschen.addEventListener("click", löschNotiz);
         notiz.appendChild(löschen);
@@ -120,14 +145,14 @@ function bestellungen(event){
         //<h2 id="notiztitel">Bestellung 1</h2>
         let notiztitel = document.createElement("h2");
         notiztitel.id = "notiztitel";
-        notiztitel.innerText = "Bestellung " + j;
+        notiztitel.innerText = "Bestellung " + row.id;
         notizliste.appendChild(notiztitel);
        
     
         //mit objekten arbeiten
-        let ready = true;
+       // let ready = true;
         
-        for(i = 0; i < Object.keys(aufschriebObj).length; i++){
+        for(i = 1; i < Object.keys(aufschriebObj).length; i++){
            
             if(Object.values(aufschriebObj)[i] > 0){
                 let notizTeil = document.createElement("p");
@@ -136,16 +161,16 @@ function bestellungen(event){
                 notizliste.appendChild(notizTeil);
                 notizliste.appendChild(document.createElement("br"));
                 
-                if(vorhanden[i] < Object.values(aufschriebObj)[i]){
+              /*  if(vorhanden[i] < Object.values(aufschriebObj)[i]){
                     ready = false;
-                }
+                }*/
             }
         }
     
         let abschließen = document.createElement("input")
         abschließen.value = "Abschließen";
         abschließen.className = "abschließen";
-        abschließen.id = j;
+        abschließen.id = row.id;
         abschließen.type = "button";
         abschließen.addEventListener("click", abschließnotiz);
         notizliste.appendChild(abschließen);
@@ -161,34 +186,32 @@ function bestellungen(event){
 
     }
     
-    }
-    }
+   // }
+    });
 }
 
     function vorhandenfunc(event){
 
-        if(localStorage.getItem("Vorhanden") == null){
+        /*if(localStorage.getItem("Vorhanden") == null){
             const vorhanden = {Frühlingsrollen: 0, Frühlingsecken: 0, Wantan: 0, Muslitos: 0, PhadThai: 0, Tagesessen: 0};
                 let vorhandenString = JSON.stringify(vorhanden);
                 localStorage.setItem("Vorhanden", vorhandenString);
-        }
+        }*/
         if(document.getElementById("liste") != null){
             let pastListe = document.getElementById("liste");
             pastListe.remove();
         }
-       
-
-        let vorhandenObj = JSON.parse(localStorage.getItem("Vorhanden"));
+       // hier war Localstorage
+        let vorhandenObj = JSON.parse(requestTextWithGET("http://localhost:3000/Vorhanden"));
         
         let liste = document.createElement("div");
         liste.id = "liste";
         let box2 = document.getElementById("box2");
         box2.appendChild(liste);
-        for(i = 0; i < Object.keys(vorhandenObj).length; i++){
+        for(i = 1; i < Object.keys(vorhandenObj).length; i++){
                
             if(Object.values(vorhandenObj)[i] > 0){
                 let vorhandenListe = document.createElement("p");
-                
                 vorhandenListe.textContent = Object.keys(vorhandenObj)[i] + ": " + Object.values(vorhandenObj)[i];
                 vorhandenListe.className = "vorhanden-liste";
                 liste.appendChild(vorhandenListe);

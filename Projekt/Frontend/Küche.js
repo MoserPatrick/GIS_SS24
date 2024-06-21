@@ -1,7 +1,26 @@
 const bearbeiten = {was: "Frühlingsrollen", wieviel: 0};
 const namen = ["Frühlingsrollen", "Frühlingsecken", "Wantan", "Muslitos", "PhadThai", "Tagesessen"];
 var add = document.getElementById("add");
-anzahl = localStorage.getItem("Anzahl");
+//anzahl = localStorage.getItem("Anzahl");
+
+async function requestTextWithGET(url) {
+    const response = await fetch(url);
+    const text = await response.text();
+    return text;
+  }
+
+async function sendJSONStringWithPOST(url, jsonString) {
+    const response = await fetch(url, {
+      method: 'POST',
+      body: jsonString,
+    });
+  }
+
+  async function deleteBestellung(url) {
+    const response = await fetch(url);
+    const text = await response.text();
+    return text;
+  }
 
 add.addEventListener("click", addbearbeitung);
 
@@ -11,16 +30,16 @@ add.addEventListener("click", addbearbeitung);
         
         // cluster Laden
         
-            for(j = 1; j <= anzahl ; j++){
+        db.each('Select * FROM Bearbeitung', (err, row) => {
                 
-            let bearbeitenObj = JSON.parse(localStorage.getItem("Bearbeiten " + j));
-            if(bearbeitenObj != null){
+            //let bearbeitenObj = JSON.parse(r);
+            //if(bearbeitenObj != null){
         
             let cluster = document.createElement("div");
             let zubereitungbox = document.getElementById("zubereitungbox");
             zubereitungbox.appendChild(cluster);
             cluster.className = "cluster";
-            cluster.id = "cluster" + j;
+            cluster.id = "cluster" + row.id;
         
             /*let timer = document.createElement("p");
             cluster.appendChild(timer);
@@ -31,48 +50,53 @@ add.addEventListener("click", addbearbeitung);
             cluster.appendChild(savewas);
             savewas.textContent = bearbeitenObj.was;
             savewas.className = "zubereitung-liste";
-            savewas.id = "savewas" + j;
+            savewas.id = "savewas" + row.id;
         
             let savewieviel = document.createElement("p");
             cluster.appendChild(savewieviel);
             savewieviel.textContent = bearbeitenObj.wieviel;
             savewieviel.className = "zubereitung-liste";
-            savewieviel.id = "savewieviel" + j;
+            savewieviel.id = "savewieviel" + row.id;
         
             let fertig = document.createElement("input");
             fertig.type = "button";
             fertig.className = "fertig";
-            fertig.id = j;
+            fertig.id = row.id;
             cluster.appendChild(fertig);
             fertig.addEventListener("click", finished);
-            }
+            //}
 
-            }
+            })
 
 function addbearbeitung(event){
 
-    let anzahl = Number(localStorage.getItem("Anzahl"));
+    /*let anzahl = Number(localStorage.getItem("Anzahl"));
     if(anzahl == 0){
         const vorhanden = {Frühlingsrollen: 0, Frühlingsecken: 0, Wantan: 0, Muslitos: 0, PhadThai: 0, Tagesessen: 0};
         let vorhandenString = JSON.stringify(vorhanden);
         localStorage.setItem("Vorhanden", vorhandenString);
     }
     anzahl += 1;
-    localStorage.setItem("Anzahl", anzahl);
+    localStorage.setItem("Anzahl", anzahl);*/
+    
+
     let was = document.getElementById("was");
     let wieviel = document.getElementById("wieviel");
 
     bearbeiten.was = was.value;
     bearbeiten.wieviel = wieviel.value;
     
-    let bearbeitenString = JSON.stringify(bearbeiten);
-    localStorage.setItem("Bearbeiten " + anzahl, bearbeitenString);
+    //let bearbeitenString = JSON.stringify(bearbeiten);
+    //localStorage.setItem("Bearbeiten " + anzahl, bearbeitenString);
+    sendJSONStringWithPOST("http://localhost:3000/Bearbeiten", JSON.stringify(bearbeiten));
+
+    let bearbeitenObj = requestTextWithGET("http://localhost:3000/Bearbeiten", event.target.id);
     
     let cluster = document.createElement("div");
     let zubereitungbox = document.getElementById("zubereitungbox");
     zubereitungbox.appendChild(cluster);
     cluster.className = "cluster";
-    cluster.id = "cluster" + anzahl;
+    cluster.id = "cluster" + bearbeitenObj.id;
 
     /*let timer = document.createElement("p");
     cluster.appendChild(timer);
@@ -83,18 +107,18 @@ function addbearbeitung(event){
     cluster.appendChild(savewas);
     savewas.textContent = was.value;
     savewas.className = "zubereitung-liste";
-    savewas.id = "savewas" + anzahl;
+    savewas.id = "savewas" + bearbeitenObj.id;
 
     let savewieviel = document.createElement("p");
     cluster.appendChild(savewieviel);
     savewieviel.textContent = wieviel.value;
     savewieviel.className = "zubereitung-liste";
-    savewieviel.id = "savewieviel" + anzahl;
+    savewieviel.id = "savewieviel" + bearbeitenObj.id;
 
     let fertig = document.createElement("input");
     fertig.type = "button";
     fertig.className = "fertig";
-    fertig.id = anzahl;
+    fertig.id = bearbeitenObj.id;
     cluster.appendChild(fertig);
     fertig.addEventListener("click", finished);
 
@@ -106,19 +130,19 @@ function addbearbeitung(event){
         const id = event.target.id;
         let was = document.getElementById("savewas" + id);
         let wieviel = document.getElementById("savewieviel" + id);
-        let ausstehend = JSON.parse(localStorage.getItem("Ausstehend"));
-        let vorhanden = JSON.parse(localStorage.getItem("Vorhanden"));
+        let ausstehendObj = JSON.parse(requestTextWithGET("http://localhost:3000/Ausstehend"));
+        let vorhandenObj = JSON.parse(requestTextWithGET("http://localhost:3000/Vorhanden"));
         let cluster = document.getElementById("cluster" + id);
         let wasString = JSON.stringify(was.textContent)
 
         
 
-        for(i = 0; i < 6; i++){
-            let key = Object.keys(ausstehend)[i];
+        for(i = 1; i < Object.keys(ausstehendObj).length; i++){
+            let key = Object.keys(ausstehendObj)[i];
             if(JSON.stringify(key) == wasString){
                 
-                ausstehend[key] -= Number(wieviel.textContent);
-                vorhanden[key] += Number(wieviel.textContent);
+                ausstehendObj[key] -= Number(wieviel.textContent);
+                vorhandenObj[key] += Number(wieviel.textContent);
             }
 /*
                 if((ausstehend[was] -= wieviel.textContent) == null){
@@ -140,13 +164,17 @@ function addbearbeitung(event){
 
     } */
         } 
+        /*
         let ausstehendString = JSON.stringify(ausstehend);
         localStorage.setItem("Ausstehend", ausstehendString);
         let vorhandenString = JSON.stringify(vorhanden);
-        localStorage.setItem("Vorhanden", vorhandenString);
+        localStorage.setItem("Vorhanden", vorhandenString);*/
+        sendJSONStringWithPOST("http://localhost:3000/Ausstehend", JSON.stringify(ausstehendObj));
+        sendJSONStringWithPOST("http://localhost:3000/Vorhanden", JSON.stringify(vorhandenObj));
 
         cluster.remove();
-        localStorage.removeItem("Bearbeiten " + id);
+        //localStorage.removeItem("Bearbeiten " + id);
+        deleteBestellung("http://localhost:3000/Bearbeiten");
 
         let box = document.getElementById("box");
         box.remove();
@@ -155,14 +183,14 @@ function addbearbeitung(event){
 
     function ladenAusstehend(event){
         // Ausstehenliste laden
-        let ausstehendObj = JSON.parse(localStorage.getItem("Ausstehend"));
+        let ausstehendObj = JSON.parse(requestTextWithGET("http://localhost:3000/Ausstehend"));
 
         let box = document.createElement("div");
         let küche = document.getElementById("küche");
         box.id = "box";
         küche.appendChild(box);
 
-        for(i = 0; i < Object.keys(ausstehendObj).length; i++){
+        for(i = 1; i < Object.keys(ausstehendObj).length; i++){
                
             if(Object.values(ausstehendObj)[i] > 0){
                 let kücheTeil = document.createElement("p");
