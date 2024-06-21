@@ -17,6 +17,14 @@ async function sendJSONStringWithPOST(url, jsonString) {
     });
   }
 
+async function sendJSONStringWithPOST(url, jsonString) {
+    const response = await fetch(url, {
+      method: 'POST',
+      body: jsonString,
+    });
+  }
+
+
 save.addEventListener("click", addNotiz);
 
 function addNotiz(event){
@@ -72,7 +80,7 @@ function addNotiz(event){
         let key2 = Object.keys(ausstehend)[i];
         ausstehend[key2] += aufschrieb[key];
     } 
-    sendJSONStringWithPOST("http://localhost:3000/Ausstehend", JSON.stringify(ausstehend));
+    updatePATCH("http://localhost:3000/Ausstehend", JSON.stringify(ausstehend));
     //let ausstehendString = JSON.stringify(ausstehend);
     //localStorage.setItem("Ausstehend", ausstehendString);
 /*

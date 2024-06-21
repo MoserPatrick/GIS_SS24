@@ -16,6 +16,14 @@ async function sendJSONStringWithPOST(url, jsonString) {
     });
   }
 
+async function updatePATCH(url, jsonString) {
+    const response = await fetch(url, {
+      method: 'POST',
+      body: jsonString,
+    });
+  }
+
+
   async function deleteBestellung(url) {
     const response = await fetch(url);
     const text = await response.text();
@@ -169,8 +177,8 @@ function addbearbeitung(event){
         localStorage.setItem("Ausstehend", ausstehendString);
         let vorhandenString = JSON.stringify(vorhanden);
         localStorage.setItem("Vorhanden", vorhandenString);*/
-        sendJSONStringWithPOST("http://localhost:3000/Ausstehend", JSON.stringify(ausstehendObj));
-        sendJSONStringWithPOST("http://localhost:3000/Vorhanden", JSON.stringify(vorhandenObj));
+        updatePATCH("http://localhost:3000/Ausstehend", JSON.stringify(ausstehendObj));
+        updatePATCH("http://localhost:3000/Vorhanden", JSON.stringify(vorhandenObj));
 
         cluster.remove();
         //localStorage.removeItem("Bearbeiten " + id);

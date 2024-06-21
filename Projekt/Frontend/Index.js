@@ -27,6 +27,14 @@ const db = new sqlite3.Database('example.db');
         });
       }
 
+    async function updatePATCH(url, jsonString) {
+        const response = await fetch(url, {
+          method: 'POST',
+          body: jsonString,
+        });
+      }
+
+
     async function deleteBestellung(url) {
         const response = await fetch(url);
         const text = await response.text();
@@ -52,7 +60,7 @@ const db = new sqlite3.Database('example.db');
 
         //let ausstehendString = JSON.stringify(ausstehend);
         //localStorage.setItem("Ausstehend", ausstehendString);
-        sendJSONStringWithPOST("http://localhost:3000/Vorhanden", JSON.stringify(vorhanden));
+        updatePATCH("http://localhost:3000/Vorhanden", JSON.stringify(vorhanden));
 
         //localStorage.removeItem("Bestellung " + event.target.id);
         deleteBestellung("http://localhost:3000/Bestellung");
@@ -84,7 +92,7 @@ const db = new sqlite3.Database('example.db');
         
         //let vorhandenString = JSON.stringify(vorhanden);
         //localStorage.setItem("Vorhanden", vorhandenString);
-        sendJSONStringWithPOST("http://localhost:3000/Vorhanden", JSON.stringify(vorhanden));
+       updatePATCH("http://localhost:3000/Vorhanden", JSON.stringify(vorhanden));
 
         //localStorage.removeItem("Bestellung " + event.target.id);
         //Delete Func
