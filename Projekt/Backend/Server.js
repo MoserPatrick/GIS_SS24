@@ -15,7 +15,7 @@ const server = http.createServer((request, response) => {
   response.setHeader('Content-Type', 'application/json');
   response.setHeader('Access-Control-Allow-Origin', '*'); // on CORS error
   const url = new URL(request.url || '', `http://${request.headers.host}`);
-  const id = url.pathname.split('/')[3];
+  const id = url.pathname.split('/')[2];
   console.log(id); // Extrahiere die ID aus der URL
   // Es fehlen noch Delete responses
   switch (url.pathname) {
