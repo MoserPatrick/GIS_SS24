@@ -25,9 +25,9 @@ async function updatePATCH(url, jsonString) {
 
 
   async function deleteBestellung(url) {
-    const response = await fetch(url);
-    const text = await response.text();
-    return text;
+    const response = await fetch(url, {
+        method: 'DELETE',
+      });
   }
 
 add.addEventListener("click", addbearbeitung);
@@ -56,13 +56,13 @@ add.addEventListener("click", addbearbeitung);
         
             let savewas = document.createElement("p");
             cluster.appendChild(savewas);
-            savewas.textContent = bearbeitenObj.was;
+            savewas.textContent = row.was;
             savewas.className = "zubereitung-liste";
             savewas.id = "savewas" + row.id;
         
             let savewieviel = document.createElement("p");
             cluster.appendChild(savewieviel);
-            savewieviel.textContent = bearbeitenObj.wieviel;
+            savewieviel.textContent = row.wieviel;
             savewieviel.className = "zubereitung-liste";
             savewieviel.id = "savewieviel" + row.id;
         
@@ -96,9 +96,9 @@ function addbearbeitung(event){
     
     //let bearbeitenString = JSON.stringify(bearbeiten);
     //localStorage.setItem("Bearbeiten " + anzahl, bearbeitenString);
-    sendJSONStringWithPOST("http://localhost:3000/Bearbeiten", JSON.stringify(bearbeiten));
+    sendJSONStringWithPOST("http://localhost:3000/Bearbeitungen", JSON.stringify(bearbeiten));
 
-    let bearbeitenObj = requestTextWithGET("http://localhost:3000/Bearbeiten", event.target.id);
+    let bearbeitenObj = requestTextWithGET("http://localhost:3000/Bearbeitungen/" + event.target.id);
     
     let cluster = document.createElement("div");
     let zubereitungbox = document.getElementById("zubereitungbox");
@@ -182,7 +182,7 @@ function addbearbeitung(event){
 
         cluster.remove();
         //localStorage.removeItem("Bearbeiten " + id);
-        deleteBestellung("http://localhost:3000/Bearbeiten");
+        deleteBestellung("http://localhost:3000/Bearbeitungen"+ target.id);
 
         let box = document.getElementById("box");
         box.remove();

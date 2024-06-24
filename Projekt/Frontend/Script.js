@@ -17,9 +17,9 @@ async function sendJSONStringWithPOST(url, jsonString) {
     });
   }
 
-async function sendJSONStringWithPOST(url, jsonString) {
+async function updatePATCH(url, jsonString) {
     const response = await fetch(url, {
-      method: 'POST',
+      method: 'PATCH',
       body: jsonString,
     });
   }
@@ -65,7 +65,7 @@ function addNotiz(event){
 
     for(i = 1; i < 7; i++){
         let key = Object.keys(aufschrieb)[i];
-        aufschrieb[key] = Number(aufnehmen[i].value);
+        aufschrieb[key] = Number(aufnehmen[i-1].value);
     }   
     
     sendJSONStringWithPOST("http://localhost:3000/Bestellungen", JSON.stringify(aufschrieb));

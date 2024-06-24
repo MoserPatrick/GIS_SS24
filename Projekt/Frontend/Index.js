@@ -2,8 +2,10 @@
 //const namen = ["Frühlingsrollen", "Frühlingsecken", "Wantan", "Muslitos", "PhadThai", "Tagesessen"];
 //const vorhanden = {Frühlingsrollen: 0, Frühlingsecken: 0, Wantan: 0, Muslitos: 0, PhadThai: 0, Tagesessen: 0};
 //counter = localStorage.getItem("counter");
-const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('example.db');
+
+//const sqlite3 = require('sqlite3').verbose();
+//const db = new sqlite3.Database('example.db');
+const db = "datenbank.db";
 
 // laden von Vorhanden
     vorhandenfunc();
@@ -12,8 +14,6 @@ const db = new sqlite3.Database('example.db');
     bestellungen();
 
     
-
-
     async function requestTextWithGET(url) {
         const response = await fetch(url);
         const text = await response.text();
@@ -29,23 +29,22 @@ const db = new sqlite3.Database('example.db');
 
     async function updatePATCH(url, jsonString) {
         const response = await fetch(url, {
-          method: 'POST',
+          method: 'PATCH',
           body: jsonString,
         });
       }
 
-
     async function deleteBestellung(url) {
-        const response = await fetch(url);
-        const text = await response.text();
-        return text;
+        const response = await fetch(url, {
+            method: 'DELETE',
+          });
       }
 
     function löschNotiz(event){
         let ausstehend = JSON.parse(requestTextWithGET("http://localhost:3000/Ausstehend"));
        // let ausstehend = JSON.parse(localStorage.getItem("Ausstehend"));
         //let target =  JSON.parse(localStorage.getItem("Bestellung " + event.target.id));
-        let target = JSON.parse(requestTextWithGET("http://localhost:3000/Bestellung", event.target.id));
+        let target = JSON.parse(requestTextWithGET("http://localhost:3000/Bestellungen/"+ event.target.id));
 
         for(i = 0; i < 6; i++){
             let key = Object.keys(target)[i];
@@ -60,10 +59,11 @@ const db = new sqlite3.Database('example.db');
 
         //let ausstehendString = JSON.stringify(ausstehend);
         //localStorage.setItem("Ausstehend", ausstehendString);
+        //{dataChange}
         updatePATCH("http://localhost:3000/Vorhanden", JSON.stringify(vorhanden));
 
         //localStorage.removeItem("Bestellung " + event.target.id);
-        deleteBestellung("http://localhost:3000/Bestellung");
+        deleteBestellung("http://localhost:3000/Bestellungen/"+ event.target.id);
         
         
        bestellungen();
@@ -71,7 +71,7 @@ const db = new sqlite3.Database('example.db');
     function abschließnotiz(event){
         
         //let target = JSON.parse(localStorage.getItem("Bestellung " + event.target.id));
-        let target = JSON.parse(requestTextWithGET("http://localhost:3000/Bestellung", event.target.id));
+        let target = JSON.parse(requestTextWithGET("http://localhost:3000/Bestellungen/"+ event.target.id));
         
         let vorhanden = JSON.parse(requestTextWithGET("http://localhost:3000/Vorhanden"));
         let ready = true;
@@ -96,7 +96,7 @@ const db = new sqlite3.Database('example.db');
 
         //localStorage.removeItem("Bestellung " + event.target.id);
         //Delete Func
-        deleteBestellung("http://localhost:3000/Bestellung");
+        deleteBestellung("http://localhost:3000/Bestellungen/" + event.target.id);
 
         bestellungen();
         
@@ -120,7 +120,7 @@ function bestellungen(event){
     //let anz = db.get('SELECT COUNT FROM Auswahl WHERE Art = "Bestellung"');
     //let target = db.get('SELECT columns FROM Auswahl ORDER BY row.id WHERE Art = "Bestellung"');
     //for(j = 1; j <= anz; j++) {
-    db.each('Select * FROM Auswahl WHERE Art = "Bestellungen"', (err, row) => {
+    db.each('Select * FROM Auswahl WHERE Art = ?', ["Bestellungen"], (err, row) => {
         //if(JSON.parse(localStorage.getItem("Bestellung " + j)) != null){
         let aufschriebObj = JSON.parse(row);
         
