@@ -24,10 +24,10 @@ const server = http.createServer((request, response) => {
         jsonString = '';
         request.on('end', (data) => {
           jsonString += data;
+          const obj = JSON.parse(jsonString);
+          db.run("INSERT INTO Auswahl VALUES (?, ?, ?, ?, ?, ?, ?)", [obj.Art, obj.Frühlingsrollen, obj.Frühlingsecken, obj.Wantan, obj.Muslitos, obj.PhadThai, obj.Tagesessen]);
         });
-        const obj = JSON.parse(jsonString);
-        db.run("INSERT INTO Auswahl VALUES (?, ?, ?, ?, ?, ?, ?)", [obj.Art, obj.Frühlingsrollen, obj.Frühlingsecken, obj.Wantan, obj.Muslitos, obj.PhadThai, obj.Tagesessen]);
-      }
+        }
       else if(method === "DELETE"){
           // delete one spezific with id 
         db.run("DELETE FROM Auswahl WHERE id = ?", [id]);
@@ -47,9 +47,9 @@ const server = http.createServer((request, response) => {
         jsonString = '';
       request.on('end', (data) => {
         jsonString += data;
+        obj = JSON.parse(jsonString);
+        db.run("INSERT INTO Auswahl VALUES (?, ?)", [obj.Was, obj.Wieviel]);
       });
-      obj = JSON.parse(jsonString);
-      db.run("INSERT INTO Auswahl VALUES (?, ?)", [obj.Was, obj.Wieviel]);
       }
       else if(method === "DELETE"){
         // delete one spezific with id 
@@ -77,8 +77,9 @@ const server = http.createServer((request, response) => {
         jsonString = '';
         request.on('end', (data) => {
           jsonString += data;
+          db.run("UPDATE Auswahl SET ? WHERE Art = ?", [jsonString,"Ausstehend"]);
         });
-        db.run("UPDATE Auswahl SET jsonString WHERE Art = ?", ["Ausstehend"]);
+        
       }
       else{
         response.write(JSON.stringify(db.get("Select * FROM Auswahl WHERE Art = ?"), ["Ausstehend"]));
@@ -91,9 +92,8 @@ const server = http.createServer((request, response) => {
           jsonString = '';
           request.on('end', (data) => {
             jsonString += data;
+            db.run("UPDATE Auswahl SET ? WHERE Art = ?"), [jsonString,"Vorhanden"];
           });
-  
-          db.run("UPDATE Auswahl SET jsonString WHERE Art = ?"), ["Vorhanden"];
         }
         else{
           response.write(db.get("Select * FROM Auswahl WHERE Art = ?", ["Vorhanden"]));

@@ -9,7 +9,7 @@ db.serialize(() => {
   
     // Insert some sample data
     const stmt = db.prepare('INSERT INTO Auswahl VALUES (?, ?, ?, ?, ?, ?, ?)');
-    stmt.run("Anstehend",0,0,0,0,0,0);
+    stmt.run("Ausstehend",0,0,0,0,0,0);
     stmt.run("Vorhanden",0,0,0,0,0,0);
     stmt.finalize();
 
