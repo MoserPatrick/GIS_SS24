@@ -15,12 +15,14 @@ const db = "datenbank.db";
 
     
     async function requestTextWithGET(url) {
-        const response = await fetch(url);
-        const text = await response.text();
         console.log("IN Getter");
-        console.log(text);
+        const response = await fetch(url);
         console.log(response);
-        return text;
+        const text = await JSON.stringify(response);
+        
+        console.log("hheeö");
+        
+        return JSON.stringify(text);
       }
     
     async function sendJSONStringWithPOST(url, jsonString) {

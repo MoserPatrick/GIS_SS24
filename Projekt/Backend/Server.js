@@ -34,7 +34,7 @@ const server = http.createServer((request, response) => {
         //stmt = db.prepare("DELETE FROM Auswahl WHERE column = ?" );
       } 
       else{
-        response.write(JSON.stringify(db.get('Select * FROM Auswahl WHERE id = ?', [id]))); 
+        response.write(JSON.stringify(db.get('SELECT * FROM Auswahl WHERE id = ?', [id]))); 
       }
       
       
@@ -56,7 +56,7 @@ const server = http.createServer((request, response) => {
         db.run("DELETE FROM Auswahl WHERE id = ?", [id]);
       }
       else{
-        response.write(JSON.stringify(db.get('Select * FROM Auswahl WHERE id = ?', [id]))); 
+        response.write(JSON.stringify(db.get('SELECT * FROM Auswahl WHERE id = ?', [id]))); 
       }
 
       break;
@@ -82,7 +82,7 @@ const server = http.createServer((request, response) => {
         
       }
       else{
-        response.write(JSON.stringify(db.get("Select * FROM Auswahl WHERE Art = ?"), ["Ausstehend"]));
+        response.write(JSON.stringify(db.get("SELECT * FROM Auswahl WHERE Art = ?"), ["Ausstehend"]));
       }
        
         break;
@@ -96,10 +96,11 @@ const server = http.createServer((request, response) => {
           });
         }
         else{
-          response.write(db.get("Select * FROM Auswahl WHERE Art = ?", ["Vorhanden"]));
+         
+          response.write(db.get("SELECT * FROM Auswahl WHERE Art = ?", ["Vorhanden"]));
           console.log("GET-Vorhanden");
-          console.log(db.get("Select * FROM Auswahl WHERE Art = ?", [Vorhanden]));
-          console.log(JSON.stringify(db.get("Select * FROM Auswahl WHERE Art = ?", [Vorhanden])));
+          console.log(db.get("SELECT * FROM Auswahl WHERE Art = ?", [Vorhanden]));
+          console.log(JSON.stringify(db.get("SELECT * FROM Auswahl WHERE Art = ?", [Vorhanden])));
         }
           
         break;
