@@ -39,6 +39,12 @@ const server = http.createServer((request, response) => {
       
       
       break;
+      case '/GetBestellungen/':
+        //response.write(JSON.stringify(db.get('SELECT * FROM Auswahl WHERE Art = ?', ["Bestellung"]))); 
+        db.each('Select * FROM Auswahl WHERE Art = ?', ["Bestellungen"], (err, row) => {
+          response.write(JSON.stringify(row));
+        })
+      break;
  
   
     case '/Bearbeitungen':
@@ -59,6 +65,13 @@ const server = http.createServer((request, response) => {
         response.write(JSON.stringify(db.get('SELECT * FROM Auswahl WHERE id = ?', [id]))); 
       }
 
+      break;
+
+      case '/GetBestellungen/':
+        //response.write(JSON.stringify(db.get('SELECT * FROM Bearbeitung WHERE Art = ?', ["Bearbeitung"]))); 
+        db.each('Select * FROM Auswahl WHERE Art = ?', ["Bearbeitung"], (err, row) => {
+          response.write(JSON.stringify(row));
+        })
       break;
     
     /*case '/Bearbeitung':
@@ -96,8 +109,8 @@ const server = http.createServer((request, response) => {
           });
         }
         else{
-         
-          response.write(db.get("SELECT * FROM Auswahl WHERE Art = ?", ["Vorhanden"]));
+          response.writeHeader('Content-Type', 'application/json');
+          response.write(JSON.stringify(db.get("SELECT * FROM Auswahl WHERE Art = ?", ["Vorhanden"])));
           console.log("GET-Vorhanden");
           console.log(db.get("SELECT * FROM Auswahl WHERE Art = ?", [Vorhanden]));
           console.log(JSON.stringify(db.get("SELECT * FROM Auswahl WHERE Art = ?", [Vorhanden])));

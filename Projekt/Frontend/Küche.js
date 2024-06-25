@@ -37,8 +37,9 @@ add.addEventListener("click", addbearbeitung);
         
         
         // cluster Laden
-        
-        db.each('Select * FROM Bearbeitung', (err, row) => {
+        let liste = JSON.parse(requestTextWithGET("http://localhost:3000/GetBearbeitung"));
+        console.log(liste);
+        liste.foreach(row =>{
                 
             //let bearbeitenObj = JSON.parse(r);
             //if(bearbeitenObj != null){

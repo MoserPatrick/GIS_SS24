@@ -5,7 +5,6 @@
 
 //const sqlite3 = require('sqlite3').verbose();
 //const db = new sqlite3.Database('example.db');
-const db = "datenbank.db";
 
 // laden von Vorhanden
     vorhandenfunc();
@@ -15,10 +14,12 @@ const db = "datenbank.db";
 
     
     async function requestTextWithGET(url) {
-        console.log("IN Getter");
-        const response = await fetch(url);
+        console.log("In Getter");
+        const response = await fetch(url)
+        response.then(console.log("Hello"));
+        
         console.log(response);
-        const text = await JSON.stringify(response);
+        const text = await response.json();
         
         console.log("hheeö");
         
@@ -45,7 +46,7 @@ const db = "datenbank.db";
           });
       }
 
-    function löschNotiz(event){
+    async function löschNotiz(event){
         let ausstehend = JSON.parse(requestTextWithGET("http://localhost:3000/Ausstehend"));
        // let ausstehend = JSON.parse(localStorage.getItem("Ausstehend"));
         //let target =  JSON.parse(localStorage.getItem("Bestellung " + event.target.id));
@@ -73,7 +74,7 @@ const db = "datenbank.db";
         
        bestellungen();
     }
-    function abschließnotiz(event){
+    async function abschließnotiz(event){
         
         //let target = JSON.parse(localStorage.getItem("Bestellung " + event.target.id));
         let target = JSON.parse(requestTextWithGET("http://localhost:3000/Bestellungen/"+ event.target.id));
@@ -109,7 +110,7 @@ const db = "datenbank.db";
         }
 }
            
-function bestellungen(event){
+async function bestellungen(event){
         
     if(document.getElementById("notizen") != null){
     let pastNotizen = document.getElementById("notizen");
@@ -125,8 +126,11 @@ function bestellungen(event){
     //let anz = db.get('SELECT COUNT FROM Auswahl WHERE Art = "Bestellung"');
     //let target = db.get('SELECT columns FROM Auswahl ORDER BY row.id WHERE Art = "Bestellung"');
     //for(j = 1; j <= anz; j++) {
-    db.each('Select * FROM Auswahl WHERE Art = ?', ["Bestellungen"], (err, row) => {
+    let liste = JSON.parse(requestTextWithGET("http://localhost:3000/GetBestellungen"));
+    console.log(liste);
+        liste.foreach(row =>{
         //if(JSON.parse(localStorage.getItem("Bestellung " + j)) != null){
+        let row = liste;
         let aufschriebObj = JSON.parse(row);
         
         let empty = true;
@@ -203,7 +207,7 @@ function bestellungen(event){
     });
 }
 
-    function vorhandenfunc(event){
+    async function vorhandenfunc(event){
 
         /*if(localStorage.getItem("Vorhanden") == null){
             const vorhanden = {Frühlingsrollen: 0, Frühlingsecken: 0, Wantan: 0, Muslitos: 0, PhadThai: 0, Tagesessen: 0};
