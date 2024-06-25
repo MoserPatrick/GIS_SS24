@@ -9,6 +9,7 @@ const port = 3000;
 
 
 const server = http.createServer(async(request, response) => {
+ 
   const method = request.method;
   response.statusCode = 200;
   let jsonString = '';
@@ -34,7 +35,7 @@ const server = http.createServer(async(request, response) => {
         //stmt = db.prepare("DELETE FROM Auswahl WHERE column = ?" );
       } 
       else{ // wenn GET
-        response.writeHeader('Content-Type', 'application/json');
+        response.writeHeader(200,{'Content-Type': 'application/json'});
         let jsonString = JSON.stringify(await db.get("SELECT * FROM Auswahl WHERE id = ?", [id]));
         response.write(jsonString);
       }
@@ -64,7 +65,7 @@ const server = http.createServer(async(request, response) => {
         db.run("DELETE FROM Auswahl WHERE id = ?", [id]);
       }
       else{// wenn GET 
-        response.writeHeader('Content-Type', 'application/json');
+        response.writeHeader(200,{'Content-Type': 'application/json'});
           let jsonString = JSON.stringify(await db.get("SELECT * FROM Auswahl WHERE id = ?", [id]));
           response.write(jsonString);
       }
@@ -99,7 +100,7 @@ const server = http.createServer(async(request, response) => {
         
       }
       else{// wenn GET
-        response.writeHeader('Content-Type', 'application/json');
+        response.writeHeader(200,{'Content-Type': 'application/json'});
         let jsonString = JSON.stringify(await db.get("SELECT * FROM Auswahl WHERE Art = ?", ["Ausstehend"]));
         response.write(jsonString);
       }
@@ -115,12 +116,24 @@ const server = http.createServer(async(request, response) => {
           });
         }
         else{// wenn GET
-          response.writeHeader('Content-Type', 'application/json');
-          let jsonString = JSON.stringify(await db.get("SELECT * FROM Auswahl WHERE Art = ?", ["Vorhanden"]));
-          response.write(jsonString);
-          console.log("GET-Vorhanden");
-          console.log(await db.get("SELECT * FROM Auswahl WHERE Art = ?", ["Vorhanden"]));
-          console.log(jsonString);
+          console.log("GET-Vorhanden anfang");
+
+          response.writeHeader(200,{'Content-Type': 'application/json'});
+          /*const obj = await db.get('SELECT * FROM Auswahl WHERE Art = ?', ["Vorhanden"],)
+          .then(jsonString = JSON.stringify(obj))
+          .then(response.write(jsonString))
+          .then( console.log(jsonString));
+          console.log("GET-Vorhanden ende");*/
+          //response.write(jsonString);
+          db.get('SELECT * FROM Auswahl WHERE Art = ?',["Vorhanden"], (err, row) => {
+              //const obj = await row; // brauch ich hier await? es ging ohne
+              jsonString = JSON.stringify(row)
+              console.log(jsonString );
+              response.write(jsonString);
+          });
+          
+          //console.log(await db.get("SELECT * FROM Auswahl WHERE Art = ?", ["Vorhanden"]));
+          
         }
           
         break;

@@ -16,15 +16,14 @@
     async function requestTextWithGET(url) {
         console.log("In Getter");
         const response = await fetch(url);
+        console.log(response);
+        const text = JSON.stringify(response);
         console.log("Nach fetch")
         //response.then(console.log("Hello"));
+        console.log(text);
+        console.log("return");
         
-        console.log(response);
-        const text = await response.json();
-        
-        console.log("hheeö");
-        
-        return JSON.stringify(text);
+        return text;
       }
     
     async function sendJSONStringWithPOST(url, jsonString) {

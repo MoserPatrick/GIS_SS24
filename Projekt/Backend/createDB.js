@@ -17,9 +17,11 @@ db.serialize(() => {
     stamt.finalize();*/
   
     // Retrieve data and print it
-    db.each('SELECT * FROM Auswahl', (err, row) => {
-      console.log(`${row.id} - ${row.name}`);
+    db.get('SELECT * FROM Auswahl WHERE Art = ?',["Vorhanden"], (err, row) => {
+      console.log(`${JSON.stringify(row)} - ${row.Art} - ${row.id}`);
     });
+   /* const row = db.get('SELECT * FROM Auswahl WHERE Art = ?',["Vorhanden"]);
+    console.log(`${JSON.stringify(row)}`);*/
   });
   
   // Close the database connection
