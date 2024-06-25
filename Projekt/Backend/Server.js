@@ -11,42 +11,54 @@ const port = 3000;
 const server = http.createServer((request, response) => {
   const method = request.method;
   response.statusCode = 200;
-  let jsonString = 'Bestellung';
+  let jsonString = '';
   response.setHeader('Content-Type', 'application/json');
   response.setHeader('Access-Control-Allow-Origin', '*'); // on CORS error
   const url = new URL(request.url || '', `http://${request.headers.host}`);
   const id = url.pathname.split('/')[2];
-  console.log(id); // Extrahiere die ID aus der URL
+ // console.log(id); // Extrahiere die ID aus der URL
   // Es fehlen noch Delete responses
   switch (url.pathname) {
     case '/Bestellungen/':
-      response.write(JSON.stringify(db.get('Select * FROM Auswahl WHERE id = ?', [id]))); 
+      if(method === "POST"){
+        jsonString = '';
+        request.on('end', (data) => {
+          jsonString += data;
+        });
+        const obj = JSON.parse(jsonString);
+        db.run("INSERT INTO Auswahl VALUES (?, ?, ?, ?, ?, ?, ?)", [obj.Art, obj.Frühlingsrollen, obj.Frühlingsecken, obj.Wantan, obj.Muslitos, obj.PhadThai, obj.Tagesessen]);
+      }
+      else if(method === "DELETE"){
+          // delete one spezific with id 
+        db.run("DELETE FROM Auswahl WHERE id = ?", [id]);
+        //stmt = db.prepare("DELETE FROM Auswahl WHERE column = ?" );
+      } 
+      else{
+        response.write(JSON.stringify(db.get('Select * FROM Auswahl WHERE id = ?', [id]))); 
+      }
+      
       
       break;
  
-    case  method === "DELETE" && '/Bestellungen':
-      // delete one spezific with id 
-      db.run("DELETE FROM Auswahl WHERE id = ?", [id]);
-      //stmt = db.prepare("DELETE FROM Auswahl WHERE column = ?" );
-      break; 
-
-    case method === "POST" && '/Bestellungen':
-      jsonString = '';
-      request.on('data', (data) => {
+  
+    case '/Bearbeitungen':
+    
+      if(method === "POST"){
+        jsonString = '';
+      request.on('end', (data) => {
         jsonString += data;
       });
       obj = JSON.parse(jsonString);
-      db.run("INSERT INTO Auswahl VALUES (?, ?, ?, ?, ?, ?, ?)", [obj.Art, obj.Frühlingsrollen, obj.Frühlingsecken, obj.Wantan, obj.Muslitos, obj.PhadThai, obj.Tagesessen]);
-    
-      request.on('end', () => {
-        console.log(obj);
-        console.log(jsonString);
-      });
-      break;
+      db.run("INSERT INTO Auswahl VALUES (?, ?)", [obj.Was, obj.Wieviel]);
+      }
+      else if(method === "DELETE"){
+        // delete one spezific with id 
+        db.run("DELETE FROM Auswahl WHERE id = ?", [id]);
+      }
+      else{
+        response.write(JSON.stringify(db.get('Select * FROM Auswahl WHERE id = ?', [id]))); 
+      }
 
-    case '/Bearbeitungen':
-      
-    response.write(JSON.stringify(db.get('Select * FROM Auswahl WHERE id = ?', [id]))); 
       break;
     
     /*case '/Bearbeitung':
@@ -59,62 +71,43 @@ const server = http.createServer((request, response) => {
 
       break;*/
 
-    case  method === "POST" && '/Bearbeitungen':
-      jsonString = '';
-      request.on('data', (data) => {
-        jsonString += data;
-      });
-      obj = JSON.parse(jsonString);
-      db.run("INSERT INTO Auswahl VALUES (?, ?)", [obj.Was, obj.Wieviel]);
-    
-      request.on('end', () => {
-        console.log(obj);
-        console.log(jsonString);
-      });
-      break;
-
-      case  method === "DELETE" && '/Bearbeitungen':
-      // delete one spezific with id 
-      db.run("DELETE FROM Auswahl WHERE id = ?", [id]);
-      break; 
-
       case '/Ausstehend':
-      
+
+      if(method === "PATCH"){
+        jsonString = '';
+        request.on('end', (data) => {
+          jsonString += data;
+        });
+        db.run("UPDATE Auswahl SET jsonString WHERE Art = ?", ["Ausstehend"]);
+      }
+      else{
         response.write(JSON.stringify(db.get("Select * FROM Auswahl WHERE Art = ?"), ["Ausstehend"]));
-
+      }
+       
         break;
   
-      case  method === "PATCH" && '/Ausstehend':
-        jsonString = '';
-        request.on('data', (data) => {
-          jsonString += data;
-        });
-        db.run("UPDATE Auswahl SET jsonString WHERE Art = ?", ["Ausstehend"])
-        request.on('end', () => {
-          console.log(JSON.parse(jsonString));
-        });
-        break;
-
         case '/Vorhanden':
-        
-          response.write(JSON.stringify(db.get("Select * FROM Auswahl WHERE Art = ?", ["Vorhanden"])));
-
+        if(method === "PATCH"){
+          jsonString = '';
+          request.on('end', (data) => {
+            jsonString += data;
+          });
+  
+          db.run("UPDATE Auswahl SET jsonString WHERE Art = ?"), ["Vorhanden"];
+        }
+        else{
+          response.write(db.get("Select * FROM Auswahl WHERE Art = ?", ["Vorhanden"]));
+          console.log("GET-Vorhanden");
+          console.log(db.get("Select * FROM Auswahl WHERE Art = ?", [Vorhanden]));
+          console.log(JSON.stringify(db.get("Select * FROM Auswahl WHERE Art = ?", [Vorhanden])));
+        }
+          
         break;
   
-      case  method === "PATCH" && '/Vorhanden':
-        jsonString = '';
-        request.on('data', (data) => {
-          jsonString += data;
-        });
-
-        db.run("UPDATE Auswahl SET jsonString WHERE Art = ?"), ["Vorhanden"];
-        request.on('end', () => {
-          console.log(JSON.parse(jsonString));
-        });
-        break;
     default:
       response.statusCode = 404;
   }
+  console.log("Ende");
   response.end();
 });
 
