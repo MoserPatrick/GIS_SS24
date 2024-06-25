@@ -15,8 +15,9 @@
     
     async function requestTextWithGET(url) {
         console.log("In Getter");
-        const response = await fetch(url)
-        response.then(console.log("Hello"));
+        const response = await fetch(url);
+        console.log("Nach fetch")
+        //response.then(console.log("Hello"));
         
         console.log(response);
         const text = await response.json();
@@ -46,7 +47,7 @@
           });
       }
 
-    async function löschNotiz(event){
+    function löschNotiz(event){
         let ausstehend = JSON.parse(requestTextWithGET("http://localhost:3000/Ausstehend"));
        // let ausstehend = JSON.parse(localStorage.getItem("Ausstehend"));
         //let target =  JSON.parse(localStorage.getItem("Bestellung " + event.target.id));
@@ -74,7 +75,7 @@
         
        bestellungen();
     }
-    async function abschließnotiz(event){
+    function abschließnotiz(event){
         
         //let target = JSON.parse(localStorage.getItem("Bestellung " + event.target.id));
         let target = JSON.parse(requestTextWithGET("http://localhost:3000/Bestellungen/"+ event.target.id));
@@ -110,7 +111,7 @@
         }
 }
            
-async function bestellungen(event){
+function bestellungen(event){
         
     if(document.getElementById("notizen") != null){
     let pastNotizen = document.getElementById("notizen");
@@ -130,7 +131,7 @@ async function bestellungen(event){
     console.log(liste);
         liste.foreach(row =>{
         //if(JSON.parse(localStorage.getItem("Bestellung " + j)) != null){
-        let row = liste;
+        
         let aufschriebObj = JSON.parse(row);
         
         let empty = true;
@@ -207,7 +208,7 @@ async function bestellungen(event){
     });
 }
 
-    async function vorhandenfunc(event){
+    function vorhandenfunc(event){
 
         /*if(localStorage.getItem("Vorhanden") == null){
             const vorhanden = {Frühlingsrollen: 0, Frühlingsecken: 0, Wantan: 0, Muslitos: 0, PhadThai: 0, Tagesessen: 0};
@@ -219,6 +220,7 @@ async function bestellungen(event){
             pastListe.remove();
         }
        // hier war Localstorage
+       console.log("Vor");
         let vorhandenObj = JSON.parse(requestTextWithGET("http://localhost:3000/Vorhanden"));
         
         let liste = document.createElement("div");

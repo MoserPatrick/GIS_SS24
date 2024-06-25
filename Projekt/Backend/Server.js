@@ -2,13 +2,13 @@ const http = require('http');
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('datenbank.db');
 
-const stmt = "";
+//const stmt = "";
 
 const hostname = '127.0.0.1'; // localhost
 const port = 3000;
 
 
-const server = http.createServer((request, response) => {
+const server = http.createServer(async(request, response) => {
   const method = request.method;
   response.statusCode = 200;
   let jsonString = '';
@@ -33,8 +33,10 @@ const server = http.createServer((request, response) => {
         db.run("DELETE FROM Auswahl WHERE id = ?", [id]);
         //stmt = db.prepare("DELETE FROM Auswahl WHERE column = ?" );
       } 
-      else{
-        response.write(JSON.stringify(db.get('SELECT * FROM Auswahl WHERE id = ?', [id]))); 
+      else{ // wenn GET
+        response.writeHeader('Content-Type', 'application/json');
+        let jsonString = JSON.stringify(await db.get("SELECT * FROM Auswahl WHERE id = ?", [id]));
+        response.write(jsonString);
       }
       
       
@@ -61,15 +63,17 @@ const server = http.createServer((request, response) => {
         // delete one spezific with id 
         db.run("DELETE FROM Auswahl WHERE id = ?", [id]);
       }
-      else{
-        response.write(JSON.stringify(db.get('SELECT * FROM Auswahl WHERE id = ?', [id]))); 
+      else{// wenn GET 
+        response.writeHeader('Content-Type', 'application/json');
+          let jsonString = JSON.stringify(await db.get("SELECT * FROM Auswahl WHERE id = ?", [id]));
+          response.write(jsonString);
       }
 
       break;
 
       case '/GetBestellungen/':
         //response.write(JSON.stringify(db.get('SELECT * FROM Bearbeitung WHERE Art = ?', ["Bearbeitung"]))); 
-        db.each('Select * FROM Auswahl WHERE Art = ?', ["Bearbeitung"], (err, row) => {
+        await db.each('Select * FROM Auswahl WHERE Art = ?', ["Bearbeitung"], (err, row) => {
           response.write(JSON.stringify(row));
         })
       break;
@@ -94,8 +98,10 @@ const server = http.createServer((request, response) => {
         });
         
       }
-      else{
-        response.write(JSON.stringify(db.get("SELECT * FROM Auswahl WHERE Art = ?"), ["Ausstehend"]));
+      else{// wenn GET
+        response.writeHeader('Content-Type', 'application/json');
+        let jsonString = JSON.stringify(await db.get("SELECT * FROM Auswahl WHERE Art = ?", ["Ausstehend"]));
+        response.write(jsonString);
       }
        
         break;
@@ -108,12 +114,13 @@ const server = http.createServer((request, response) => {
             db.run("UPDATE Auswahl SET ? WHERE Art = ?"), [jsonString,"Vorhanden"];
           });
         }
-        else{
+        else{// wenn GET
           response.writeHeader('Content-Type', 'application/json');
-          response.write(JSON.stringify(db.get("SELECT * FROM Auswahl WHERE Art = ?", ["Vorhanden"])));
+          let jsonString = JSON.stringify(await db.get("SELECT * FROM Auswahl WHERE Art = ?", ["Vorhanden"]));
+          response.write(jsonString);
           console.log("GET-Vorhanden");
-          console.log(db.get("SELECT * FROM Auswahl WHERE Art = ?", [Vorhanden]));
-          console.log(JSON.stringify(db.get("SELECT * FROM Auswahl WHERE Art = ?", [Vorhanden])));
+          console.log(await db.get("SELECT * FROM Auswahl WHERE Art = ?", ["Vorhanden"]));
+          console.log(jsonString);
         }
           
         break;
