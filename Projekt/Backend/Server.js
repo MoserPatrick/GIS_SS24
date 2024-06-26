@@ -16,7 +16,8 @@ const server = http.createServer(async(request, response) => {
   response.setHeader('Content-Type', 'application/json');
   response.setHeader('Access-Control-Allow-Origin', '*'); // on CORS error
   const url = new URL(request.url || '', `http://${request.headers.host}`);
-  const id = url.pathname.split('/')[2];
+  
+  
  // console.log(id); // Extrahiere die ID aus der URL
   // Es fehlen noch Delete responses
   switch (url.pathname) {
@@ -34,12 +35,20 @@ const server = http.createServer(async(request, response) => {
         });
         }
       else if(method === "DELETE"){
+        const id = url.searchParams.get("id");
+        console.log("url " + url);
+        console.log("id " + id);
           // delete one spezific with id 
+          console.log("DELETING");
         db.run("DELETE FROM Auswahl WHERE id = ?", [id]);
         response.end();
         //stmt = db.prepare("DELETE FROM Auswahl WHERE column = ?" );
       } 
       else{ // wenn GET
+        const id = url.searchParams.get("id");
+        console.log("url " + url);
+        console.log("id " + id);
+        console.log("GETTTTING");
         response.writeHeader(200,{'Content-Type': 'application/json'});
         db.get('SELECT * FROM Auswahl WHERE id = ?',[id], async (err, row) => {
           const obj = await row; // brauch ich hier await? es ging ohne
@@ -78,11 +87,17 @@ const server = http.createServer(async(request, response) => {
         });
       }
       else if(method === "DELETE"){
+        const id = url.searchParams.get("id");
+        console.log("url " + url);
+        console.log("id " + id);
         // delete one spezific with id 
         db.run("DELETE FROM Bearbeitung WHERE id = ?", [id]);
         response.end();
       }
       else{// wenn GET 
+        const id = url.searchParams.get("id");
+        console.log("url " + url);
+        console.log("id " + id);
           response.writeHeader(200,{'Content-Type': 'application/json'});
           db.get('SELECT * FROM Bearbeitung WHERE id = ?',[id], async (err, row) => {
             const obj = await row; // brauch ich hier await? es ging ohne

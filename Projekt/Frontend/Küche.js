@@ -62,7 +62,7 @@ async function addbearbeitung(event){
     //localStorage.setItem("Bearbeiten " + anzahl, bearbeitenString);
     sendJSONStringWithPOST("http://localhost:3000/Bearbeitungen", JSON.stringify(bearbeiten));
 
-    let bearbeitenString = await requestTextWithGET("http://localhost:3000/Bearbeitungen" + event.target.id);
+    let bearbeitenString = await requestTextWithGET("http://localhost:3000/Bearbeitungen?id=" + event.target.id);
     let bearbeitenObj = JSON.parse(bearbeitenString);
     
     let cluster = document.createElement("div");

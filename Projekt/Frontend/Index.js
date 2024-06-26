@@ -55,7 +55,7 @@
         console.log("Arbeitetdd");
        // let ausstehend = JSON.parse(localStorage.getItem("Ausstehend"));
         //let target =  JSON.parse(localStorage.getItem("Bestellung " + event.target.id));
-        let targetString = await requestTextWithGET("http://localhost:3000/Bestellungen"+ event.target.id);
+        let targetString = await requestTextWithGET("http://localhost:3000/Bestellungen?id="+ event.target.id);
         let target = JSON.parse(targetString);
         console.log("Arbeitet");
         for(i = 2; i < 8; i++){
@@ -75,7 +75,7 @@
         updatePATCH("http://localhost:3000/Vorhanden", JSON.stringify(vorhanden));
 
         //localStorage.removeItem("Bestellung " + event.target.id);
-        deleteBestellung("http://localhost:3000/Bestellungen"+ event.target.id);
+        deleteBestellung("http://localhost:3000/Bestellungen?id="+ event.target.id);
         
         
        bestellungen();
@@ -83,7 +83,7 @@
     async function abschließnotiz(event){
         
         //let target = JSON.parse(localStorage.getItem("Bestellung " + event.target.id));
-        let targetString = await requestTextWithGET("http://localhost:3000/Bestellungen"+ event.target.id);
+        let targetString = await requestTextWithGET("http://localhost:3000/Bestellungen?id="+ event.target.id);
         let target = JSON.parse(targetString);
         
         let vorhandenString = await requestTextWithGET("http://localhost:3000/Vorhanden");
@@ -110,7 +110,7 @@
 
         //localStorage.removeItem("Bestellung " + event.target.id);
         //Delete Func
-        deleteBestellung("http://localhost:3000/Bestellungen" + event.target.id);
+        deleteBestellung("http://localhost:3000/Bestellungen?id=" + event.target.id);
 
         bestellungen();
         
