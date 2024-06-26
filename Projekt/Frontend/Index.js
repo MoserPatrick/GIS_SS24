@@ -72,10 +72,12 @@
         //let ausstehendString = JSON.stringify(ausstehend);
         //localStorage.setItem("Ausstehend", ausstehendString);
         //{dataChange}
+        
         updatePATCH("http://localhost:3000/Ausstehend", JSON.stringify(ausstehend));
-
+        
         //localStorage.removeItem("Bestellung " + event.target.id);
         deleteBestellung("http://localhost:3000/Bestellungen?id="+ event.target.id);
+        
         
         
        bestellungen();
@@ -134,7 +136,9 @@ async function bestellungen(event){
     //let anz = db.get('SELECT COUNT FROM Auswahl WHERE Art = "Bestellung"');
     //let target = db.get('SELECT columns FROM Auswahl ORDER BY row.id WHERE Art = "Bestellung"');
     //for(j = 1; j <= anz; j++) {
+        console.log("Absturz");
     let listeString = await requestTextWithGET("http://localhost:3000/GetBestellungen");
+
     let liste = JSON.parse(listeString);
     //console.log(liste);
         let counter = 0;

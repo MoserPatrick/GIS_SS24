@@ -61,7 +61,7 @@ const server = http.createServer(async(request, response) => {
       case '/GetBestellungen':
         //response.write(JSON.stringify(db.get('SELECT * FROM Auswahl WHERE Art = ?', ["Bestellung"]))); 
           response.writeHeader(200,{'Content-Type': 'application/json'});
-         db.all('SELECT * FROM Auswahl WHERE Art = ?', ["Bestellung"], (err, row) => {
+          db.all('SELECT * FROM Auswahl WHERE Art = ?', ["Bestellung"], (err, row) => {
           response.write(JSON.stringify(row));
           response.end();
         })
@@ -130,13 +130,13 @@ const server = http.createServer(async(request, response) => {
         //console.log("yes PATCH");
         request.on('data', (data) => {
           jsonString += data;
-        //  console.log(jsonString);
+        console.log(jsonString);
         });
         request.on('end', () => {
           const obj = JSON.parse(jsonString);
           //console.log(obj);
           //db.run("UPDATE Auswahl SET ?,?,?,?,?,?,?,? WHERE Art = ?", [obj.id, obj.Art, obj.Frühlingsrollen, obj.Frühlingsecken, obj.Wantan, obj.Muslitos, obj.PhadThai,obj.Tagesessen, "Ausstehend"]);
-          db.run("UPDATE Auswahl SET Frühlingsrollen = ?, Frühlingsecken = ?, Wantan = ?, Muslitos = ?, PHadThai = ?, Tagesessen = ? WHERE Art = ?", [obj.Frühlingsrollen, obj.Frühlingsecken, obj.Wantan, obj.Muslitos, obj.PhadThai, obj.Tagesessen,"Ausstehend"]);
+          db.run("UPDATE Auswahl SET Frühlingsrollen = ?, Frühlingsecken = ?, Wantan = ?, Muslitos = ?, PhadThai = ?, Tagesessen = ? WHERE Art = ?", [obj.Frühlingsrollen, obj.Frühlingsecken, obj.Wantan, obj.Muslitos, obj.PhadThai, obj.Tagesessen,"Ausstehend"]);
           response.end();
         });
         
