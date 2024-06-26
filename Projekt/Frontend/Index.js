@@ -72,7 +72,7 @@
         //let ausstehendString = JSON.stringify(ausstehend);
         //localStorage.setItem("Ausstehend", ausstehendString);
         //{dataChange}
-        updatePATCH("http://localhost:3000/Vorhanden", JSON.stringify(vorhanden));
+        updatePATCH("http://localhost:3000/Ausstehend", JSON.stringify(ausstehend));
 
         //localStorage.removeItem("Bestellung " + event.target.id);
         deleteBestellung("http://localhost:3000/Bestellungen?id="+ event.target.id);

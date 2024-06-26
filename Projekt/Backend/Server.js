@@ -40,8 +40,9 @@ const server = http.createServer(async(request, response) => {
         console.log("id " + id);
           // delete one spezific with id 
           console.log("DELETING");
-        db.run("DELETE FROM Auswahl WHERE id = ?", [id]);
-        response.end();
+        db.run("DELETE FROM Auswahl WHERE id = ?", [id])
+        .then(response.end());
+        
         //stmt = db.prepare("DELETE FROM Auswahl WHERE column = ?" );
       } 
       else{ // wenn GET
@@ -129,13 +130,13 @@ const server = http.createServer(async(request, response) => {
       break;*/
 
       case '/Ausstehend':
-      console.log("Enter Patch");
+     // console.log("Enter Patch");
       if(method === "PATCH"){
         jsonString = '';
-        console.log("yes PATCH");
+        //console.log("yes PATCH");
         request.on('data', (data) => {
           jsonString += data;
-          console.log(jsonString);
+        //  console.log(jsonString);
         });
         request.on('end', () => {
           const obj = JSON.parse(jsonString);

@@ -149,7 +149,7 @@ async function addbearbeitung(event){
 
         cluster.remove();
         //localStorage.removeItem("Bearbeiten " + id);
-        deleteBestellung("http://localhost:3000/Bearbeitungen"+ id);
+        deleteBestellung("http://localhost:3000/Bearbeitungen?id="+ id);
 
         let box = document.getElementById("box");
         box.remove();
