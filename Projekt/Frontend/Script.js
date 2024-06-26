@@ -75,13 +75,15 @@ async function addNotiz(event){
     console.log("POst: " + aufschrieb);
     console.log("POststring: " + JSON.stringify(aufschrieb));
     sendJSONStringWithPOST("http://localhost:3000/Bestellungen", JSON.stringify(aufschrieb));
+    
     //let aufschriebString = JSON.stringify(aufschrieb);
     //localStorage.setItem("Bestellung "+ counter, aufschriebString);
 
     //zu ausstehen hinzufügen
     //const ausstehend = JSON.parse(localStorage.getItem("Ausstehend"));
-    const ausstehendString = await requestTextWithGET("http://localhost:3000/Ausstehend");
-    const ausstehend = JSON.parse(ausstehendString)
+    let ausstehendString = await requestTextWithGET("http://localhost:3000/Ausstehend");
+    console.log("----------------------------------------------------------");
+    let ausstehend = JSON.parse(ausstehendString)
     console.log("Updated: " + ausstehend);
     for(i = 2; i < 8; i++){
         let key = Object.keys(aufschrieb)[i];
@@ -91,6 +93,7 @@ async function addNotiz(event){
     console.log("Updated: " + ausstehend);
     ausstehendString = JSON.stringify(ausstehend);
     updatePATCH("http://localhost:3000/Ausstehend", ausstehendString);
+    window.location = "index.html";
     //let ausstehendString = JSON.stringify(ausstehend);
     //localStorage.setItem("Ausstehend", ausstehendString);
 /*
@@ -109,7 +112,7 @@ async function addNotiz(event){
     localStorage.setItem("Ausstehend", ausstehendString);
 */
     //seite wechseln
-    window.location = "index.html";
+   
 
     
 }   

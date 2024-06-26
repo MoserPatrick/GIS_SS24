@@ -16,6 +16,7 @@ const server = http.createServer(async(request, response) => {
   response.setHeader('Content-Type', 'application/json');
   response.setHeader('Access-Control-Allow-Origin', '*'); // on CORS error
   response.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+  response.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   const url = new URL(request.url || '', `http://${request.headers.host}`);
   
   
@@ -59,7 +60,8 @@ const server = http.createServer(async(request, response) => {
       break;
       case '/GetBestellungen':
         //response.write(JSON.stringify(db.get('SELECT * FROM Auswahl WHERE Art = ?', ["Bestellung"]))); 
-        db.all('SELECT * FROM Auswahl WHERE Art = ?', ["Bestellung"], (err, row) => {
+          response.writeHeader(200,{'Content-Type': 'application/json'});
+         db.all('SELECT * FROM Auswahl WHERE Art = ?', ["Bestellung"], (err, row) => {
           response.write(JSON.stringify(row));
           response.end();
         })
@@ -103,6 +105,7 @@ const server = http.createServer(async(request, response) => {
 
       case '/GetBearbeitungen':
         //response.write(JSON.stringify(db.get('SELECT * FROM Bearbeitung WHERE Art = ?', ["Bearbeitung"]))); 
+          response.writeHeader(200,{'Content-Type': 'application/json'});
           db.all('SELECT * FROM Bearbeitung ', (err, row) => {
           response.write(JSON.stringify(row));
           response.end();
@@ -121,7 +124,7 @@ const server = http.createServer(async(request, response) => {
 
       case '/Ausstehend':
      // console.log("Enter Patch");
-      if(method === "PATCH"){
+      if(method != "GET"){
         console.log("Entering PATCH");
         jsonString = '';
         //console.log("yes PATCH");
@@ -138,6 +141,7 @@ const server = http.createServer(async(request, response) => {
         });
         
       }
+
       else {// wenn GET
         response.writeHeader(200,{'Content-Type': 'application/json'});
         db.get('SELECT * FROM Auswahl WHERE Art = ?',["Ausstehend"], async (err, row) => {
@@ -151,7 +155,7 @@ const server = http.createServer(async(request, response) => {
         break;
   
         case '/Vorhanden':
-          if(method === "PATCH"){
+          if(method != "GET"){
             jsonString = '';
             request.on('data', (data) => {
               jsonString += data;
@@ -184,7 +188,7 @@ const server = http.createServer(async(request, response) => {
     default:
       response.statusCode = 404;
   }
-  console.log("Ende");
+ // console.log("Ende");
 
 });
 

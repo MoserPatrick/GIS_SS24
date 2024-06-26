@@ -61,7 +61,8 @@ async function addbearbeitung(event){
     //let bearbeitenString = JSON.stringify(bearbeiten);
     //localStorage.setItem("Bearbeiten " + anzahl, bearbeitenString);
     sendJSONStringWithPOST("http://localhost:3000/Bearbeitungen", JSON.stringify(bearbeiten));
-
+    ladenCluster();
+/*
     let bearbeitenString = await requestTextWithGET("http://localhost:3000/Bearbeitungen?id=" + event.target.id);
     let bearbeitenObj = JSON.parse(bearbeitenString);
     
@@ -74,7 +75,7 @@ async function addbearbeitung(event){
     /*let timer = document.createElement("p");
     cluster.appendChild(timer);
     timer.textContent = "3:00";
-    timer.className = "zubereitung-timer";*/
+    timer.className = "zubereitung-timer";
 
     let savewas = document.createElement("p");
     cluster.appendChild(savewas);
@@ -94,7 +95,7 @@ async function addbearbeitung(event){
     fertig.id = bearbeitenObj.id;
     cluster.appendChild(fertig);
     fertig.addEventListener("click", finished);
-
+*/
 }
 
 
@@ -105,6 +106,7 @@ async function addbearbeitung(event){
         let wieviel = document.getElementById("savewieviel" + id);
         let ausstehendString = await requestTextWithGET("http://localhost:3000/Ausstehend");
         let ausstehendObj = JSON.parse(ausstehendString);
+        console.log("Abszurz");
         let vorhandenString = await requestTextWithGET("http://localhost:3000/Vorhanden");
         let vorhandenObj = JSON.parse(vorhandenString);
         let cluster = document.getElementById("cluster" + id);
@@ -144,6 +146,7 @@ async function addbearbeitung(event){
         localStorage.setItem("Ausstehend", ausstehendString);
         let vorhandenString = JSON.stringify(vorhanden);
         localStorage.setItem("Vorhanden", vorhandenString);*/
+    
         updatePATCH("http://localhost:3000/Ausstehend", JSON.stringify(ausstehendObj));
         updatePATCH("http://localhost:3000/Vorhanden", JSON.stringify(vorhandenObj));
 
@@ -160,6 +163,7 @@ async function addbearbeitung(event){
         // Ausstehenliste laden
         console.log("Ausstehend ladne");
         let ausstehendString = await requestTextWithGET("http://localhost:3000/Ausstehend");
+        console.log("absturz");
         let ausstehendObj = JSON.parse(ausstehendString);
 
         let box = document.createElement("div");
@@ -184,11 +188,11 @@ async function addbearbeitung(event){
     async function ladenCluster(event){
 
           // cluster Laden
-
-          let listeString = await requestTextWithGET("http://localhost:3000/GetBearbeitung");
+          console.log("Hallo");
+          let listeString = await requestTextWithGET("http://localhost:3000/GetBearbeitungen");
           let liste = JSON.parse(listeString);
           console.log(liste);
-          console.log("Hallo");
+         
           liste.forEach(row =>{
                   
               //let bearbeitenObj = JSON.parse(r);
@@ -207,13 +211,13 @@ async function addbearbeitung(event){
           
               let savewas = document.createElement("p");
               cluster.appendChild(savewas);
-              savewas.textContent = row.was;
+              savewas.textContent = row.Was;
               savewas.className = "zubereitung-liste";
               savewas.id = "savewas" + row.id;
           
               let savewieviel = document.createElement("p");
               cluster.appendChild(savewieviel);
-              savewieviel.textContent = row.wieviel;
+              savewieviel.textContent = row.Wieviel;
               savewieviel.className = "zubereitung-liste";
               savewieviel.id = "savewieviel" + row.id;
           
