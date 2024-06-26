@@ -54,7 +54,7 @@ const server = http.createServer(async(request, response) => {
       break;
       case '/GetBestellungen':
         //response.write(JSON.stringify(db.get('SELECT * FROM Auswahl WHERE Art = ?', ["Bestellung"]))); 
-        db.all('Select * FROM Auswahl WHERE Art = ?', ["Bestellung"], (err, row) => {
+        db.all('SELECT * FROM Auswahl WHERE Art = ?', ["Bestellung"], (err, row) => {
           response.write(JSON.stringify(row));
           response.end();
         })
@@ -66,17 +66,20 @@ const server = http.createServer(async(request, response) => {
         jsonString = '';
         request.on('data', (data) => {
           jsonString += data;
+          console.log("Data: "+ data);
         });
+        
         request.on('end', () => {
+          console.log("Daten: "+ jsonString);
           const obj = JSON.parse(jsonString);
           const uniqueId = uuidv4();
-          db.run("INSERT INTO Auswahl VALUES (?, ?, ?)", [uniqueId, obj.Was, obj.Wieviel]);
+          db.run("INSERT INTO Bearbeitung VALUES (?, ?, ?)", [uniqueId, obj.was, obj.wieviel]);
           response.end();
         });
       }
       else if(method === "DELETE"){
         // delete one spezific with id 
-        db.run("DELETE FROM Auswahl WHERE id = ?", [id]);
+        db.run("DELETE FROM Bearbeitung WHERE id = ?", [id]);
         response.end();
       }
       else{// wenn GET 
@@ -114,6 +117,7 @@ const server = http.createServer(async(request, response) => {
       console.log("Enter Patch");
       if(method === "PATCH"){
         jsonString = '';
+        console.log("yes PATCH");
         request.on('data', (data) => {
           jsonString += data;
           console.log(jsonString);
@@ -122,13 +126,14 @@ const server = http.createServer(async(request, response) => {
           const obj = JSON.parse(jsonString);
           console.log("Updated: "+ jsonString);
           //console.log(obj);
+          //db.run("UPDATE Auswahl SET ?,?,?,?,?,?,?,? WHERE Art = ?", [obj.id, obj.Art, obj.Frühlingsrollen, obj.Frühlingsecken, obj.Wantan, obj.Muslitos, obj.PhadThai,obj.Tagesessen, "Ausstehend"]);
           db.run("UPDATE Auswahl SET ? WHERE Art = ?", [obj,"Ausstehend"]);
           console.log("CLOSE Patch");
           response.end();
         });
         
       }
-      else{// wenn GET
+      else {// wenn GET
         console.log("Enter Get");
         response.writeHeader(200,{'Content-Type': 'application/json'});
         db.get('SELECT * FROM Auswahl WHERE Art = ?',["Ausstehend"], async (err, row) => {

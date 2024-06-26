@@ -1,4 +1,4 @@
-const bearbeiten = {id: "id", was: "Frühlingsrollen", wieviel: 0};
+const bearbeiten = {id: "", was: "Frühlingsrollen", wieviel: 0};
 const namen = ["Frühlingsrollen", "Frühlingsecken", "Wantan", "Muslitos", "PhadThai", "Tagesessen"];
 var add = document.getElementById("add");
 //anzahl = localStorage.getItem("Anzahl");
@@ -19,7 +19,7 @@ async function sendJSONStringWithPOST(url, jsonString) {
 
 async function updatePATCH(url, jsonString) {
     const response = await fetch(url, {
-      method: 'POST',
+      method: 'PATCH',
       body: jsonString,
     });
   }
@@ -33,10 +33,9 @@ async function updatePATCH(url, jsonString) {
 
 add.addEventListener("click", addbearbeitung);
 
-            
-            ladenAusstehend();
-            ladenCluster();
-        
+    ladenCluster();
+    ladenAusstehend();
+          
        
 
 async function addbearbeitung(event){
@@ -54,15 +53,17 @@ async function addbearbeitung(event){
     let was = document.getElementById("was");
     let wieviel = document.getElementById("wieviel");
 
-    bearbeiten.id = "";
     bearbeiten.was = was.value;
     bearbeiten.wieviel = wieviel.value;
-    
+    console.log("OBject: " +was.value);
+    console.log("OBject: " +wieviel.value);
+   
     //let bearbeitenString = JSON.stringify(bearbeiten);
     //localStorage.setItem("Bearbeiten " + anzahl, bearbeitenString);
     sendJSONStringWithPOST("http://localhost:3000/Bearbeitungen", JSON.stringify(bearbeiten));
 
-    let bearbeitenObj = await JSON.parse(requestTextWithGET("http://localhost:3000/Bearbeitungen" + event.target.id));
+    let bearbeitenString = await requestTextWithGET("http://localhost:3000/Bearbeitungen" + event.target.id);
+    let bearbeitenObj = JSON.parse(bearbeitenString);
     
     let cluster = document.createElement("div");
     let zubereitungbox = document.getElementById("zubereitungbox");
@@ -102,8 +103,10 @@ async function addbearbeitung(event){
         const id = event.target.id;
         let was = document.getElementById("savewas" + id);
         let wieviel = document.getElementById("savewieviel" + id);
-        let ausstehendObj = await JSON.parse(requestTextWithGET("http://localhost:3000/Ausstehend"));
-        let vorhandenObj = await JSON.parse(requestTextWithGET("http://localhost:3000/Vorhanden"));
+        let ausstehendString = await requestTextWithGET("http://localhost:3000/Ausstehend");
+        let ausstehendObj = JSON.parse(ausstehendString);
+        let vorhandenString = await requestTextWithGET("http://localhost:3000/Vorhanden");
+        let vorhandenObj = JSON.parse(vorhandenString);
         let cluster = document.getElementById("cluster" + id);
         let wasString = JSON.stringify(was.textContent)
 
@@ -155,7 +158,9 @@ async function addbearbeitung(event){
 
     async function ladenAusstehend(event){
         // Ausstehenliste laden
-        let ausstehendObj = await JSON.parse(requestTextWithGET("http://localhost:3000/Ausstehend"));
+        console.log("Ausstehend ladne");
+        let ausstehendString = await requestTextWithGET("http://localhost:3000/Ausstehend");
+        let ausstehendObj = JSON.parse(ausstehendString);
 
         let box = document.createElement("div");
         let küche = document.getElementById("küche");
@@ -173,50 +178,56 @@ async function addbearbeitung(event){
                 
             }
         }
+        console.log("End");
     }
     
     async function ladenCluster(event){
 
-         // cluster Laden
-         let liste = await JSON.parse(requestTextWithGET("http://localhost:3000/GetBearbeitung"));
-         console.log(liste);
-         liste.foreach(row =>{
-                 
-             //let bearbeitenObj = JSON.parse(r);
-             //if(bearbeitenObj != null){
+          // cluster Laden
+
+          let listeString = await requestTextWithGET("http://localhost:3000/GetBearbeitung");
+          let liste = JSON.parse(listeString);
+          console.log(liste);
+          console.log("Hallo");
+          liste.forEach(row =>{
+                  
+              //let bearbeitenObj = JSON.parse(r);
+              //if(bearbeitenObj != null){
+          
+              let cluster = document.createElement("div");
+              let zubereitungbox = document.getElementById("zubereitungbox");
+              zubereitungbox.appendChild(cluster);
+              cluster.className = "cluster";
+              cluster.id = "cluster" + row.id;
+          
+              /*let timer = document.createElement("p");
+              cluster.appendChild(timer);
+              timer.textContent = "3:00";
+              timer.className = "zubereitung-timer";*/
+          
+              let savewas = document.createElement("p");
+              cluster.appendChild(savewas);
+              savewas.textContent = row.was;
+              savewas.className = "zubereitung-liste";
+              savewas.id = "savewas" + row.id;
+          
+              let savewieviel = document.createElement("p");
+              cluster.appendChild(savewieviel);
+              savewieviel.textContent = row.wieviel;
+              savewieviel.className = "zubereitung-liste";
+              savewieviel.id = "savewieviel" + row.id;
+          
+              let fertig = document.createElement("input");
+              fertig.type = "button";
+              fertig.className = "fertig";
+              fertig.id = row.id;
+              cluster.appendChild(fertig);
+              fertig.addEventListener("click", finished);
+              //}
+  
+              });
          
-             let cluster = document.createElement("div");
-             let zubereitungbox = document.getElementById("zubereitungbox");
-             zubereitungbox.appendChild(cluster);
-             cluster.className = "cluster";
-             cluster.id = "cluster" + row.id;
-         
-             /*let timer = document.createElement("p");
-             cluster.appendChild(timer);
-             timer.textContent = "3:00";
-             timer.className = "zubereitung-timer";*/
-         
-             let savewas = document.createElement("p");
-             cluster.appendChild(savewas);
-             savewas.textContent = row.was;
-             savewas.className = "zubereitung-liste";
-             savewas.id = "savewas" + row.id;
-         
-             let savewieviel = document.createElement("p");
-             cluster.appendChild(savewieviel);
-             savewieviel.textContent = row.wieviel;
-             savewieviel.className = "zubereitung-liste";
-             savewieviel.id = "savewieviel" + row.id;
-         
-             let fertig = document.createElement("input");
-             fertig.type = "button";
-             fertig.className = "fertig";
-             fertig.id = row.id;
-             cluster.appendChild(fertig);
-             fertig.addEventListener("click", finished);
-             //}
- 
-             })
+
     }
     /*
     let cluster = document.createElement("div");

@@ -15,15 +15,15 @@
     
 
     async function requestTextWithGET(url) {
-        console.log("In Getter");
+        //console.log("In Getter");
         const response = await fetch(url);
-        console.log(response.Art);
-        console.log(response);
+       // console.log(response.Art);
+      //  console.log(response);
         const text = await response.text();
-        console.log("Nach fetch")
+       // console.log("Nach fetch")
         //response.then(console.log("Hello"));
-        console.log(text);
-        console.log("return");
+       // console.log(text);
+       // console.log("return");
         
         return text;
       }
@@ -49,11 +49,15 @@
       }
 
     async function löschNotiz(event){
-        let ausstehend = await JSON.parse(requestTextWithGET("http://localhost:3000/Ausstehend"));
+        console.log("Löschen");
+        let ausstehendString = await requestTextWithGET("http://localhost:3000/Ausstehend");
+        let ausstehend =  JSON.parse(ausstehendString);
+        console.log("Arbeitetdd");
        // let ausstehend = JSON.parse(localStorage.getItem("Ausstehend"));
         //let target =  JSON.parse(localStorage.getItem("Bestellung " + event.target.id));
-        let target = await JSON.parse(requestTextWithGET("http://localhost:3000/Bestellungen"+ event.target.id));
-
+        let targetString = await requestTextWithGET("http://localhost:3000/Bestellungen"+ event.target.id);
+        let target = JSON.parse(targetString);
+        console.log("Arbeitet");
         for(i = 2; i < 8; i++){
             let key = Object.keys(target)[i];
             /*if((ausstehend[key] -= target[key]) < 0){
@@ -79,9 +83,11 @@
     async function abschließnotiz(event){
         
         //let target = JSON.parse(localStorage.getItem("Bestellung " + event.target.id));
-        let target = await JSON.parse(requestTextWithGET("http://localhost:3000/Bestellungen"+ event.target.id));
+        let targetString = await requestTextWithGET("http://localhost:3000/Bestellungen"+ event.target.id);
+        let target = JSON.parse(targetString);
         
-        let vorhanden = await JSON.parse(requestTextWithGET("http://localhost:3000/Vorhanden"));
+        let vorhandenString = await requestTextWithGET("http://localhost:3000/Vorhanden");
+        let vorhanden = JSON.parse(vorhandenString);
         let ready = true;
 
         for(i = 2; i < 8; i++){
@@ -128,13 +134,15 @@ async function bestellungen(event){
     //let anz = db.get('SELECT COUNT FROM Auswahl WHERE Art = "Bestellung"');
     //let target = db.get('SELECT columns FROM Auswahl ORDER BY row.id WHERE Art = "Bestellung"');
     //for(j = 1; j <= anz; j++) {
-    let liste = await JSON.parse(requestTextWithGET("http://localhost:3000/GetBestellungen"));
-    console.log(liste);
+    let listeString = await requestTextWithGET("http://localhost:3000/GetBestellungen");
+    let liste = JSON.parse(listeString);
+    //console.log(liste);
+        let counter = 0;
         liste.forEach(row =>{
         //if(JSON.parse(localStorage.getItem("Bestellung " + j)) != null){
-        
+        counter++;
         //let aufschriebObj = row;
-        
+        console.log(row.id);
         let empty = true;
     
         for(l = 2; l < Object.keys(row).length; l++){
@@ -164,7 +172,7 @@ async function bestellungen(event){
         //<h2 id="notiztitel">Bestellung 1</h2>
         let notiztitel = document.createElement("h2");
         notiztitel.id = "notiztitel";
-        notiztitel.innerText = "Bestellung " + row.id;
+        notiztitel.innerText = "Bestellung " + counter;
         notizliste.appendChild(notiztitel);
        
     
@@ -221,8 +229,9 @@ async function bestellungen(event){
             pastListe.remove();
         }
        // hier war Localstorage
-       console.log("Vor");
-        let vorhandenObj = await JSON.parse(requestTextWithGET("http://localhost:3000/Vorhanden"));
+       //console.log("Vor");
+        let vorhandenString = await requestTextWithGET("http://localhost:3000/Vorhanden");
+        let vorhandenObj = JSON.parse(vorhandenString);
         
         let liste = document.createElement("div");
         liste.id = "liste";

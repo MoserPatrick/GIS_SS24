@@ -64,7 +64,6 @@ async function addNotiz(event){
     }   */
 
     let aufnehmen = document.getElementsByClassName("aufnehmen");
-
     aufschrieb[Object.keys(aufschrieb)[0]] = "";
     aufschrieb[Object.keys(aufschrieb)[1]] = "Bestellung";
     for(i = 2; i < 8; i++){
@@ -81,14 +80,17 @@ async function addNotiz(event){
 
     //zu ausstehen hinzufügen
     //const ausstehend = JSON.parse(localStorage.getItem("Ausstehend"));
-    const ausstehend = await JSON.parse(requestTextWithGET("http://localhost:3000/Ausstehend"));
+    const ausstehendString = await requestTextWithGET("http://localhost:3000/Ausstehend");
+    const ausstehend = JSON.parse(ausstehendString)
+    console.log("Updated: " + ausstehend);
     for(i = 2; i < 8; i++){
         let key = Object.keys(aufschrieb)[i];
         let key2 = Object.keys(ausstehend)[i];
         ausstehend[key2] += aufschrieb[key];
     } 
     console.log("Updated: " + ausstehend);
-    updatePATCH("http://localhost:3000/Ausstehend", JSON.stringify(ausstehend));
+    ausstehendString = JSON.stringify(ausstehend);
+    updatePATCH("http://localhost:3000/Ausstehend", ausstehendString);
     //let ausstehendString = JSON.stringify(ausstehend);
     //localStorage.setItem("Ausstehend", ausstehendString);
 /*

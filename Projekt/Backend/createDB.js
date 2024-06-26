@@ -5,7 +5,7 @@ const db = new sqlite3.Database('datenbank.db');
 // Create a table
 db.serialize(() => {
     db.run('CREATE TABLE IF NOT EXISTS Auswahl (id TEXT, Art TEXT, Frühlingsrollen INT, Frühlingsecken INT, Wantan INT, Muslitos INT, PhadThai INT, Tagesessen INT)');
-    db.run('CREATE TABLE IF NOT EXISTS Bearbeitung (ID TEXT, Was TEXT, Wieviel INT)');
+    db.run('CREATE TABLE IF NOT EXISTS Bearbeitung (id TEXT, Was TEXT, Wieviel INT)');
   
     // Insert some sample data
     const stmt = db.prepare('INSERT INTO Auswahl VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
