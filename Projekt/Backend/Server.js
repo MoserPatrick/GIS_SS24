@@ -92,8 +92,9 @@ const server = http.createServer(async(request, response) => {
         console.log("url " + url);
         console.log("id " + id);
         // delete one spezific with id 
-        db.run("DELETE FROM Bearbeitung WHERE id = ?", [id]);
-        response.end();
+        db.run("DELETE FROM Bearbeitung WHERE id = ?", [id])
+        .then(response.end());
+        
       }
       else{// wenn GET 
         const id = url.searchParams.get("id");
@@ -143,7 +144,7 @@ const server = http.createServer(async(request, response) => {
           console.log("Updated: "+ jsonString);
           //console.log(obj);
           //db.run("UPDATE Auswahl SET ?,?,?,?,?,?,?,? WHERE Art = ?", [obj.id, obj.Art, obj.Frühlingsrollen, obj.Frühlingsecken, obj.Wantan, obj.Muslitos, obj.PhadThai,obj.Tagesessen, "Ausstehend"]);
-          db.run("UPDATE Auswahl SET ? WHERE Art = ?", [obj,"Ausstehend"]);
+          db.run("UPDATE Auswahl SET Frühlingsrollen = ?, Frühlingsecken = ?, Wantan = ?, Muslitos = ?, PHadThai = ?, Tagesessen = ? WHERE Art = ?", [obj.Frühlingsrollen, obj.Frühlingsecken, obj.Wantan, obj.Muslitos, obj.PhadThai, obj.Tagesessen,"Ausstehend"]);
           console.log("CLOSE Patch");
           response.end();
         });
@@ -172,7 +173,7 @@ const server = http.createServer(async(request, response) => {
             });
             request.on('end', () => {
               const obj = JSON.parse(jsonString);
-              db.run("UPDATE Auswahl SET ? WHERE Art = ?", [obj,"Vorhanden"]);
+              db.run("UPDATE Auswahl SET Frühlingsrollen = ?, Frühlingsecken = ?, Wantan = ?, Muslitos = ?, PHadThai = ?, Tagesessen = ? WHERE Art = ?", [obj.Frühlingsrollen, obj.Frühlingsecken, obj.Wantan, obj.Muslitos, obj.PhadThai, obj.Tagesessen,"Vorhanden"]);
               response.end();
             });
           }
