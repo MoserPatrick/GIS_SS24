@@ -15,6 +15,7 @@ const server = http.createServer(async(request, response) => {
   let jsonString = '';
   response.setHeader('Content-Type', 'application/json');
   response.setHeader('Access-Control-Allow-Origin', '*'); // on CORS error
+  response.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
   const url = new URL(request.url || '', `http://${request.headers.host}`);
   
   
@@ -35,26 +36,20 @@ const server = http.createServer(async(request, response) => {
         });
         }
       else if(method === "DELETE"){
+        console.log("Entering DELETE");
         const id = url.searchParams.get("id");
-        console.log("url " + url);
-        console.log("id " + id);
           // delete one spezific with id 
-          console.log("DELETING");
-        db.run("DELETE FROM Auswahl WHERE id = ?", [id])
-        .then(response.end());
+        db.run("DELETE FROM Auswahl WHERE id = ?", [id]);
+        response.end();
         
         //stmt = db.prepare("DELETE FROM Auswahl WHERE column = ?" );
       } 
       else{ // wenn GET
         const id = url.searchParams.get("id");
-        console.log("url " + url);
-        console.log("id " + id);
-        console.log("GETTTTING");
         response.writeHeader(200,{'Content-Type': 'application/json'});
         db.get('SELECT * FROM Auswahl WHERE id = ?',[id], async (err, row) => {
           const obj = await row; // brauch ich hier await? es ging ohne
-          jsonString = JSON.stringify(obj)
-          console.log(jsonString );
+          jsonString = JSON.stringify(obj);
           response.write(jsonString);
           response.end();
         })
@@ -80,7 +75,6 @@ const server = http.createServer(async(request, response) => {
         });
         
         request.on('end', () => {
-          console.log("Daten: "+ jsonString);
           const obj = JSON.parse(jsonString);
           const uniqueId = uuidv4();
           db.run("INSERT INTO Bearbeitung VALUES (?, ?, ?)", [uniqueId, obj.was, obj.wieviel]);
@@ -89,22 +83,17 @@ const server = http.createServer(async(request, response) => {
       }
       else if(method === "DELETE"){
         const id = url.searchParams.get("id");
-        console.log("url " + url);
-        console.log("id " + id);
         // delete one spezific with id 
-        db.run("DELETE FROM Bearbeitung WHERE id = ?", [id])
-        .then(response.end());
+        db.run("DELETE FROM Bearbeitung WHERE id = ?", [id]);
+        response.end();
         
       }
       else{// wenn GET 
         const id = url.searchParams.get("id");
-        console.log("url " + url);
-        console.log("id " + id);
           response.writeHeader(200,{'Content-Type': 'application/json'});
           db.get('SELECT * FROM Bearbeitung WHERE id = ?',[id], async (err, row) => {
             const obj = await row; // brauch ich hier await? es ging ohne
-            jsonString = JSON.stringify(obj)
-            console.log(jsonString );
+            jsonString = JSON.stringify(obj);
             response.write(jsonString);
             response.end();
           })
@@ -133,6 +122,7 @@ const server = http.createServer(async(request, response) => {
       case '/Ausstehend':
      // console.log("Enter Patch");
       if(method === "PATCH"){
+        console.log("Entering PATCH");
         jsonString = '';
         //console.log("yes PATCH");
         request.on('data', (data) => {
@@ -141,24 +131,19 @@ const server = http.createServer(async(request, response) => {
         });
         request.on('end', () => {
           const obj = JSON.parse(jsonString);
-          console.log("Updated: "+ jsonString);
           //console.log(obj);
           //db.run("UPDATE Auswahl SET ?,?,?,?,?,?,?,? WHERE Art = ?", [obj.id, obj.Art, obj.Frühlingsrollen, obj.Frühlingsecken, obj.Wantan, obj.Muslitos, obj.PhadThai,obj.Tagesessen, "Ausstehend"]);
           db.run("UPDATE Auswahl SET Frühlingsrollen = ?, Frühlingsecken = ?, Wantan = ?, Muslitos = ?, PHadThai = ?, Tagesessen = ? WHERE Art = ?", [obj.Frühlingsrollen, obj.Frühlingsecken, obj.Wantan, obj.Muslitos, obj.PhadThai, obj.Tagesessen,"Ausstehend"]);
-          console.log("CLOSE Patch");
           response.end();
         });
         
       }
       else {// wenn GET
-        console.log("Enter Get");
         response.writeHeader(200,{'Content-Type': 'application/json'});
         db.get('SELECT * FROM Auswahl WHERE Art = ?',["Ausstehend"], async (err, row) => {
           const obj = await row; // brauch ich hier await? es ging ohne
-          jsonString = JSON.stringify(obj)
-          console.log(jsonString );
+          jsonString = JSON.stringify(obj);
           response.write(jsonString);
-          console.log("CLOSE GET");
           response.end();
       });
       }
@@ -178,8 +163,6 @@ const server = http.createServer(async(request, response) => {
             });
           }
         else{// wenn GET
-          console.log("GET-Vorhanden anfang");
-
           response.writeHeader(200,{'Content-Type': 'application/json'});
           /*const obj = await db.get('SELECT * FROM Auswahl WHERE Art = ?', ["Vorhanden"],)
           .then(jsonString = JSON.stringify(obj))
@@ -189,8 +172,7 @@ const server = http.createServer(async(request, response) => {
           //response.write(jsonString);
           db.get('SELECT * FROM Auswahl WHERE Art = ?',["Vorhanden"], async (err, row) => {
               const obj = await row; // brauch ich hier await? es ging ohne
-              jsonString = JSON.stringify(obj)
-              console.log(jsonString );
+              jsonString = JSON.stringify(obj);
               response.write(jsonString);
               response.end();
           });
