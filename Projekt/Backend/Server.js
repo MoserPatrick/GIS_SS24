@@ -1,7 +1,7 @@
 const http = require('http');
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('datenbank.db');
-
+const {v4:uuidv4} = require("uuid");
 //const stmt = "";
 
 const hostname = '127.0.0.1'; // localhost
@@ -20,62 +20,83 @@ const server = http.createServer(async(request, response) => {
  // console.log(id); // Extrahiere die ID aus der URL
   // Es fehlen noch Delete responses
   switch (url.pathname) {
-    case '/Bestellungen/':
+    case '/Bestellungen':
       if(method === "POST"){
         jsonString = '';
-        request.on('end', (data) => {
+        request.on('data', (data) => {
           jsonString += data;
+        });
+        request.on('end', () => {
           const obj = JSON.parse(jsonString);
-          db.run("INSERT INTO Auswahl VALUES (?, ?, ?, ?, ?, ?, ?)", [obj.Art, obj.Frühlingsrollen, obj.Frühlingsecken, obj.Wantan, obj.Muslitos, obj.PhadThai, obj.Tagesessen]);
+          const uniqueId = uuidv4();
+          db.run("INSERT INTO Auswahl VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [uniqueId, obj.Art, obj.Frühlingsrollen, obj.Frühlingsecken, obj.Wantan, obj.Muslitos, obj.PhadThai, obj.Tagesessen]);
+          response.end();
         });
         }
       else if(method === "DELETE"){
           // delete one spezific with id 
         db.run("DELETE FROM Auswahl WHERE id = ?", [id]);
+        response.end();
         //stmt = db.prepare("DELETE FROM Auswahl WHERE column = ?" );
       } 
       else{ // wenn GET
         response.writeHeader(200,{'Content-Type': 'application/json'});
-        let jsonString = JSON.stringify(await db.get("SELECT * FROM Auswahl WHERE id = ?", [id]));
-        response.write(jsonString);
+        db.get('SELECT * FROM Auswahl WHERE id = ?',[id], async (err, row) => {
+          const obj = await row; // brauch ich hier await? es ging ohne
+          jsonString = JSON.stringify(obj)
+          console.log(jsonString );
+          response.write(jsonString);
+          response.end();
+        })
       }
       
       
       break;
-      case '/GetBestellungen/':
+      case '/GetBestellungen':
         //response.write(JSON.stringify(db.get('SELECT * FROM Auswahl WHERE Art = ?', ["Bestellung"]))); 
-        db.each('Select * FROM Auswahl WHERE Art = ?', ["Bestellungen"], (err, row) => {
+        db.all('Select * FROM Auswahl WHERE Art = ?', ["Bestellung"], (err, row) => {
           response.write(JSON.stringify(row));
+          response.end();
         })
       break;
  
   
     case '/Bearbeitungen':
-    
       if(method === "POST"){
         jsonString = '';
-      request.on('end', (data) => {
-        jsonString += data;
-        obj = JSON.parse(jsonString);
-        db.run("INSERT INTO Auswahl VALUES (?, ?)", [obj.Was, obj.Wieviel]);
-      });
+        request.on('data', (data) => {
+          jsonString += data;
+        });
+        request.on('end', () => {
+          const obj = JSON.parse(jsonString);
+          const uniqueId = uuidv4();
+          db.run("INSERT INTO Auswahl VALUES (?, ?, ?)", [uniqueId, obj.Was, obj.Wieviel]);
+          response.end();
+        });
       }
       else if(method === "DELETE"){
         // delete one spezific with id 
         db.run("DELETE FROM Auswahl WHERE id = ?", [id]);
+        response.end();
       }
       else{// wenn GET 
-        response.writeHeader(200,{'Content-Type': 'application/json'});
-          let jsonString = JSON.stringify(await db.get("SELECT * FROM Auswahl WHERE id = ?", [id]));
-          response.write(jsonString);
+          response.writeHeader(200,{'Content-Type': 'application/json'});
+          db.get('SELECT * FROM Bearbeitung WHERE id = ?',[id], async (err, row) => {
+            const obj = await row; // brauch ich hier await? es ging ohne
+            jsonString = JSON.stringify(obj)
+            console.log(jsonString );
+            response.write(jsonString);
+            response.end();
+          })
       }
 
       break;
 
-      case '/GetBestellungen/':
+      case '/GetBearbeitungen':
         //response.write(JSON.stringify(db.get('SELECT * FROM Bearbeitung WHERE Art = ?', ["Bearbeitung"]))); 
-        await db.each('Select * FROM Auswahl WHERE Art = ?', ["Bearbeitung"], (err, row) => {
+          db.all('SELECT * FROM Bearbeitung ', (err, row) => {
           response.write(JSON.stringify(row));
+          response.end();
         })
       break;
     
@@ -90,31 +111,50 @@ const server = http.createServer(async(request, response) => {
       break;*/
 
       case '/Ausstehend':
-
+      console.log("Enter Patch");
       if(method === "PATCH"){
         jsonString = '';
-        request.on('end', (data) => {
+        request.on('data', (data) => {
           jsonString += data;
-          db.run("UPDATE Auswahl SET ? WHERE Art = ?", [jsonString,"Ausstehend"]);
+          console.log(jsonString);
+        });
+        request.on('end', () => {
+          const obj = JSON.parse(jsonString);
+          console.log("Updated: "+ jsonString);
+          //console.log(obj);
+          db.run("UPDATE Auswahl SET ? WHERE Art = ?", [obj,"Ausstehend"]);
+          console.log("CLOSE Patch");
+          response.end();
         });
         
       }
       else{// wenn GET
+        console.log("Enter Get");
         response.writeHeader(200,{'Content-Type': 'application/json'});
-        let jsonString = JSON.stringify(await db.get("SELECT * FROM Auswahl WHERE Art = ?", ["Ausstehend"]));
-        response.write(jsonString);
+        db.get('SELECT * FROM Auswahl WHERE Art = ?',["Ausstehend"], async (err, row) => {
+          const obj = await row; // brauch ich hier await? es ging ohne
+          jsonString = JSON.stringify(obj)
+          console.log(jsonString );
+          response.write(jsonString);
+          console.log("CLOSE GET");
+          response.end();
+      });
       }
        
         break;
   
         case '/Vorhanden':
-        if(method === "PATCH"){
-          jsonString = '';
-          request.on('end', (data) => {
-            jsonString += data;
-            db.run("UPDATE Auswahl SET ? WHERE Art = ?"), [jsonString,"Vorhanden"];
-          });
-        }
+          if(method === "PATCH"){
+            jsonString = '';
+            request.on('data', (data) => {
+              jsonString += data;
+            });
+            request.on('end', () => {
+              const obj = JSON.parse(jsonString);
+              db.run("UPDATE Auswahl SET ? WHERE Art = ?", [obj,"Vorhanden"]);
+              response.end();
+            });
+          }
         else{// wenn GET
           console.log("GET-Vorhanden anfang");
 
@@ -125,15 +165,14 @@ const server = http.createServer(async(request, response) => {
           .then( console.log(jsonString));
           console.log("GET-Vorhanden ende");*/
           //response.write(jsonString);
-          db.get('SELECT * FROM Auswahl WHERE Art = ?',["Vorhanden"], (err, row) => {
-              //const obj = await row; // brauch ich hier await? es ging ohne
-              jsonString = JSON.stringify(row)
+          db.get('SELECT * FROM Auswahl WHERE Art = ?',["Vorhanden"], async (err, row) => {
+              const obj = await row; // brauch ich hier await? es ging ohne
+              jsonString = JSON.stringify(obj)
               console.log(jsonString );
               response.write(jsonString);
+              response.end();
           });
-          
           //console.log(await db.get("SELECT * FROM Auswahl WHERE Art = ?", ["Vorhanden"]));
-          
         }
           
         break;
@@ -142,7 +181,7 @@ const server = http.createServer(async(request, response) => {
       response.statusCode = 404;
   }
   console.log("Ende");
-  response.end();
+
 });
 
 server.listen(port, hostname, () => {

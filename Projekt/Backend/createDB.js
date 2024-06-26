@@ -4,13 +4,13 @@ const db = new sqlite3.Database('datenbank.db');
 
 // Create a table
 db.serialize(() => {
-    db.run('CREATE TABLE IF NOT EXISTS Auswahl (Art TEXT, Frühlingsrollen INT, Frühlingsecken INT, Wantan INT, Muslitos INT, PhadThai INT, Tagesessen INT)');
-    db.run('CREATE TABLE IF NOT EXISTS Bearbeitung (Was TEXT, Wieviel INT)');
+    db.run('CREATE TABLE IF NOT EXISTS Auswahl (id TEXT, Art TEXT, Frühlingsrollen INT, Frühlingsecken INT, Wantan INT, Muslitos INT, PhadThai INT, Tagesessen INT)');
+    db.run('CREATE TABLE IF NOT EXISTS Bearbeitung (ID TEXT, Was TEXT, Wieviel INT)');
   
     // Insert some sample data
-    const stmt = db.prepare('INSERT INTO Auswahl VALUES (?, ?, ?, ?, ?, ?, ?)');
-    stmt.run("Ausstehend",0,0,0,0,0,0);
-    stmt.run("Vorhanden",0,0,0,0,0,0);
+    const stmt = db.prepare('INSERT INTO Auswahl VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
+    stmt.run("1","Ausstehend",0,0,0,0,0,0);
+    stmt.run("2","Vorhanden",0,0,0,0,0,0);
     stmt.finalize();
 
     /*const stamt = db.prepare('INSERT INTO Bearbeitung VALUES (?, ?)');

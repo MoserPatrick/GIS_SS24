@@ -13,11 +13,13 @@
     bestellungen();
 
     
+
     async function requestTextWithGET(url) {
         console.log("In Getter");
         const response = await fetch(url);
+        console.log(response.Art);
         console.log(response);
-        const text = JSON.stringify(response);
+        const text = await response.text();
         console.log("Nach fetch")
         //response.then(console.log("Hello"));
         console.log(text);
@@ -46,13 +48,13 @@
           });
       }
 
-    function löschNotiz(event){
-        let ausstehend = JSON.parse(requestTextWithGET("http://localhost:3000/Ausstehend"));
+    async function löschNotiz(event){
+        let ausstehend = await JSON.parse(requestTextWithGET("http://localhost:3000/Ausstehend"));
        // let ausstehend = JSON.parse(localStorage.getItem("Ausstehend"));
         //let target =  JSON.parse(localStorage.getItem("Bestellung " + event.target.id));
-        let target = JSON.parse(requestTextWithGET("http://localhost:3000/Bestellungen/"+ event.target.id));
+        let target = await JSON.parse(requestTextWithGET("http://localhost:3000/Bestellungen"+ event.target.id));
 
-        for(i = 0; i < 6; i++){
+        for(i = 2; i < 8; i++){
             let key = Object.keys(target)[i];
             /*if((ausstehend[key] -= target[key]) < 0){
                 ausstehend[key] = 0;
@@ -69,27 +71,27 @@
         updatePATCH("http://localhost:3000/Vorhanden", JSON.stringify(vorhanden));
 
         //localStorage.removeItem("Bestellung " + event.target.id);
-        deleteBestellung("http://localhost:3000/Bestellungen/"+ event.target.id);
+        deleteBestellung("http://localhost:3000/Bestellungen"+ event.target.id);
         
         
        bestellungen();
     }
-    function abschließnotiz(event){
+    async function abschließnotiz(event){
         
         //let target = JSON.parse(localStorage.getItem("Bestellung " + event.target.id));
-        let target = JSON.parse(requestTextWithGET("http://localhost:3000/Bestellungen/"+ event.target.id));
+        let target = await JSON.parse(requestTextWithGET("http://localhost:3000/Bestellungen"+ event.target.id));
         
-        let vorhanden = JSON.parse(requestTextWithGET("http://localhost:3000/Vorhanden"));
+        let vorhanden = await JSON.parse(requestTextWithGET("http://localhost:3000/Vorhanden"));
         let ready = true;
 
-        for(i = 0; i < 6; i++){
+        for(i = 2; i < 8; i++){
             let key = Object.keys(target)[i];
             if(vorhanden[key] < target[key]){
                 ready = false;
             }
         }
         if(ready == true){
-        for(i = 0; i < 6; i++){
+        for(i = 2; i < 8; i++){
             let key = Object.keys(target)[i];
             vorhanden[key] -= target[key];
         }
@@ -102,7 +104,7 @@
 
         //localStorage.removeItem("Bestellung " + event.target.id);
         //Delete Func
-        deleteBestellung("http://localhost:3000/Bestellungen/" + event.target.id);
+        deleteBestellung("http://localhost:3000/Bestellungen" + event.target.id);
 
         bestellungen();
         
@@ -110,7 +112,7 @@
         }
 }
            
-function bestellungen(event){
+async function bestellungen(event){
         
     if(document.getElementById("notizen") != null){
     let pastNotizen = document.getElementById("notizen");
@@ -126,17 +128,17 @@ function bestellungen(event){
     //let anz = db.get('SELECT COUNT FROM Auswahl WHERE Art = "Bestellung"');
     //let target = db.get('SELECT columns FROM Auswahl ORDER BY row.id WHERE Art = "Bestellung"');
     //for(j = 1; j <= anz; j++) {
-    let liste = JSON.parse(requestTextWithGET("http://localhost:3000/GetBestellungen"));
+    let liste = await JSON.parse(requestTextWithGET("http://localhost:3000/GetBestellungen"));
     console.log(liste);
-        liste.foreach(row =>{
+        liste.forEach(row =>{
         //if(JSON.parse(localStorage.getItem("Bestellung " + j)) != null){
         
-        let aufschriebObj = JSON.parse(row);
+        //let aufschriebObj = row;
         
         let empty = true;
     
-        for(l = 1; l < Object.keys(aufschriebObj).length; l++){
-            if(Object.values(aufschriebObj)[l] > 0){
+        for(l = 2; l < Object.keys(row).length; l++){
+            if(Object.values(row)[l] > 0){
                 empty = false;
             }
         }
@@ -169,11 +171,11 @@ function bestellungen(event){
         //mit objekten arbeiten
        // let ready = true;
         
-        for(i = 1; i < Object.keys(aufschriebObj).length; i++){
+        for(i = 2; i < Object.keys(row).length; i++){
            
-            if(Object.values(aufschriebObj)[i] > 0){
+            if(Object.values(row)[i] > 0){
                 let notizTeil = document.createElement("p");
-                notizTeil.textContent = Object.keys(aufschriebObj)[i] + ": " + Object.values(aufschriebObj)[i];
+                notizTeil.textContent = Object.keys(row)[i] + ": " + Object.values(row)[i];
                 notizTeil.className = "notiztext";
                 notizliste.appendChild(notizTeil);
                 notizliste.appendChild(document.createElement("br"));
@@ -207,7 +209,7 @@ function bestellungen(event){
     });
 }
 
-    function vorhandenfunc(event){
+    async function vorhandenfunc(event){
 
         /*if(localStorage.getItem("Vorhanden") == null){
             const vorhanden = {Frühlingsrollen: 0, Frühlingsecken: 0, Wantan: 0, Muslitos: 0, PhadThai: 0, Tagesessen: 0};
@@ -220,13 +222,13 @@ function bestellungen(event){
         }
        // hier war Localstorage
        console.log("Vor");
-        let vorhandenObj = JSON.parse(requestTextWithGET("http://localhost:3000/Vorhanden"));
+        let vorhandenObj = await JSON.parse(requestTextWithGET("http://localhost:3000/Vorhanden"));
         
         let liste = document.createElement("div");
         liste.id = "liste";
         let box2 = document.getElementById("box2");
         box2.appendChild(liste);
-        for(i = 1; i < Object.keys(vorhandenObj).length; i++){
+        for(i = 2; i < Object.keys(vorhandenObj).length; i++){
                
             if(Object.values(vorhandenObj)[i] > 0){
                 let vorhandenListe = document.createElement("p");

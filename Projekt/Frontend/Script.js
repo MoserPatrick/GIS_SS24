@@ -2,7 +2,9 @@
 var save = document.getElementById("save");
 
 //const namen = ["Fruehlingsrollen", "Fruehlingsecken", "Wantan", "Muslitos", "PhadThai", "Tagesessen"];
-const aufschrieb = {Art: "Bestellung", Frühlingsrollen: 60, Frühlingsecken: 0, Wantan: 0, Muslitos: 0, PhadThai: 0, Tagesessen: 0};
+const aufschrieb = {id: 0, Art: "Bestellung", Frühlingsrollen: 60, Frühlingsecken: 0, Wantan: 0, Muslitos: 0, PhadThai: 0, Tagesessen: 0};
+
+
 
 async function requestTextWithGET(url) {
     const response = await fetch(url);
@@ -27,7 +29,7 @@ async function updatePATCH(url, jsonString) {
 
 save.addEventListener("click", addNotiz);
 
-function addNotiz(event){
+async function addNotiz(event){
    /*let counter = Number(localStorage.getItem("counter"));
 
     if(counter == 0){
@@ -63,23 +65,29 @@ function addNotiz(event){
 
     let aufnehmen = document.getElementsByClassName("aufnehmen");
 
-    for(i = 1; i < 7; i++){
+    aufschrieb[Object.keys(aufschrieb)[0]] = "";
+    aufschrieb[Object.keys(aufschrieb)[1]] = "Bestellung";
+    for(i = 2; i < 8; i++){
         let key = Object.keys(aufschrieb)[i];
-        aufschrieb[key] = Number(aufnehmen[i-1].value);
+        //aufschrieb[key] = Number(aufnehmen[i-2].value);
+        aufschrieb[key] = Number(aufnehmen[i-2].value);
+        console.log("reading: " + Number(aufnehmen[i-2].value));
     }   
-    
+    console.log("POst: " + aufschrieb);
+    console.log("POststring: " + JSON.stringify(aufschrieb));
     sendJSONStringWithPOST("http://localhost:3000/Bestellungen", JSON.stringify(aufschrieb));
     //let aufschriebString = JSON.stringify(aufschrieb);
     //localStorage.setItem("Bestellung "+ counter, aufschriebString);
 
     //zu ausstehen hinzufügen
     //const ausstehend = JSON.parse(localStorage.getItem("Ausstehend"));
-    const ausstehend = requestTextWithGET("http://localhost:3000/Ausstehend");
-    for(i = 1; i < 7; i++){
+    const ausstehend = await JSON.parse(requestTextWithGET("http://localhost:3000/Ausstehend"));
+    for(i = 2; i < 8; i++){
         let key = Object.keys(aufschrieb)[i];
         let key2 = Object.keys(ausstehend)[i];
         ausstehend[key2] += aufschrieb[key];
     } 
+    console.log("Updated: " + ausstehend);
     updatePATCH("http://localhost:3000/Ausstehend", JSON.stringify(ausstehend));
     //let ausstehendString = JSON.stringify(ausstehend);
     //localStorage.setItem("Ausstehend", ausstehendString);
