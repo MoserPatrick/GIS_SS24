@@ -61,9 +61,13 @@ const server = http.createServer(async(request, response) => {
       case '/GetBestellungen':
         //response.write(JSON.stringify(db.get('SELECT * FROM Auswahl WHERE Art = ?', ["Bestellung"]))); 
           response.writeHeader(200,{'Content-Type': 'application/json'});
-          db.all('SELECT * FROM Auswahl WHERE Art = ?', ["Bestellung"], (err, row) => {
-          response.write(JSON.stringify(row));
+          db.all('SELECT * FROM Auswahl WHERE Art = ?', ["Bestellung"], async (err, row) => {
+          const obj = await row; // brauch ich hier await? es ging ohne
+          jsonString = JSON.stringify(obj);
+          response.write(jsonString);
           response.end();
+          // db.all('SELECT * FROM Auswahl WHERE Art = ?', ["Bestellung"], (err, row) => {
+          //response.write(JSON.stringify(row));
         })
       break;
  
@@ -124,16 +128,22 @@ const server = http.createServer(async(request, response) => {
 
       case '/Ausstehend':
      // console.log("Enter Patch");
-      if(method != "GET"){
+      if(method === "PATCH"){
         console.log("Entering PATCH");
         jsonString = '';
         //console.log("yes PATCH");
-        request.on('data', (data) => {
-          jsonString += data;
-        console.log(jsonString);
+        // request.on(data) wird irgendwie übersprungen
+        request.on('data', async (data) => {
+          jsonString += await data;
+          console.log("Json "+jsonString);
+        
         });
-        request.on('end', () => {
-          const obj = JSON.parse(jsonString);
+        request.on('end', async () => {
+          console.log("Json "+jsonString);
+          const objString =  jsonString;
+          const obj = JSON.parse(objString);
+          console.log("object " +obj);
+
           //console.log(obj);
           //db.run("UPDATE Auswahl SET ?,?,?,?,?,?,?,? WHERE Art = ?", [obj.id, obj.Art, obj.Frühlingsrollen, obj.Frühlingsecken, obj.Wantan, obj.Muslitos, obj.PhadThai,obj.Tagesessen, "Ausstehend"]);
           db.run("UPDATE Auswahl SET Frühlingsrollen = ?, Frühlingsecken = ?, Wantan = ?, Muslitos = ?, PhadThai = ?, Tagesessen = ? WHERE Art = ?", [obj.Frühlingsrollen, obj.Frühlingsecken, obj.Wantan, obj.Muslitos, obj.PhadThai, obj.Tagesessen,"Ausstehend"]);
@@ -157,11 +167,12 @@ const server = http.createServer(async(request, response) => {
         case '/Vorhanden':
           if(method != "GET"){
             jsonString = '';
-            request.on('data', (data) => {
-              jsonString += data;
+            request.on('data', async (data) => {
+              jsonString += await data;
             });
-            request.on('end', () => {
-              const obj = JSON.parse(jsonString);
+            request.on('end', async () => {
+              const objString = await jsonString
+              const obj = JSON.parse(objString);
               db.run("UPDATE Auswahl SET Frühlingsrollen = ?, Frühlingsecken = ?, Wantan = ?, Muslitos = ?, PHadThai = ?, Tagesessen = ? WHERE Art = ?", [obj.Frühlingsrollen, obj.Frühlingsecken, obj.Wantan, obj.Muslitos, obj.PhadThai, obj.Tagesessen,"Vorhanden"]);
               response.end();
             });

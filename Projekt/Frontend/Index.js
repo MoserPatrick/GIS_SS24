@@ -73,10 +73,10 @@
         //localStorage.setItem("Ausstehend", ausstehendString);
         //{dataChange}
         
-        updatePATCH("http://localhost:3000/Ausstehend", JSON.stringify(ausstehend));
+        await updatePATCH("http://localhost:3000/Ausstehend", JSON.stringify(ausstehend));
         
         //localStorage.removeItem("Bestellung " + event.target.id);
-        deleteBestellung("http://localhost:3000/Bestellungen?id="+ event.target.id);
+        await deleteBestellung("http://localhost:3000/Bestellungen?id="+ event.target.id);
         
         
         
@@ -108,11 +108,11 @@
         
         //let vorhandenString = JSON.stringify(vorhanden);
         //localStorage.setItem("Vorhanden", vorhandenString);
-       updatePATCH("http://localhost:3000/Vorhanden", JSON.stringify(vorhanden));
+       await updatePATCH("http://localhost:3000/Vorhanden", JSON.stringify(vorhanden));
 
         //localStorage.removeItem("Bestellung " + event.target.id);
         //Delete Func
-        deleteBestellung("http://localhost:3000/Bestellungen?id=" + event.target.id);
+        await deleteBestellung("http://localhost:3000/Bestellungen?id=" + event.target.id);
 
         bestellungen();
         

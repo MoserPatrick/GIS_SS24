@@ -60,7 +60,7 @@ async function addbearbeitung(event){
    
     //let bearbeitenString = JSON.stringify(bearbeiten);
     //localStorage.setItem("Bearbeiten " + anzahl, bearbeitenString);
-    sendJSONStringWithPOST("http://localhost:3000/Bearbeitungen", JSON.stringify(bearbeiten));
+    await sendJSONStringWithPOST("http://localhost:3000/Bearbeitungen", JSON.stringify(bearbeiten));
     ladenCluster();
 /*
     let bearbeitenString = await requestTextWithGET("http://localhost:3000/Bearbeitungen?id=" + event.target.id);
@@ -100,17 +100,19 @@ async function addbearbeitung(event){
 
 
     async function finished(event){
-
+        console.log("Start");
         const id = event.target.id;
         let was = document.getElementById("savewas" + id);
         let wieviel = document.getElementById("savewieviel" + id);
         let ausstehendString = await requestTextWithGET("http://localhost:3000/Ausstehend");
         let ausstehendObj = JSON.parse(ausstehendString);
-        console.log("Abszurz");
+        console.log("object " + ausstehendString);
         let vorhandenString = await requestTextWithGET("http://localhost:3000/Vorhanden");
         let vorhandenObj = JSON.parse(vorhandenString);
         let cluster = document.getElementById("cluster" + id);
         let wasString = JSON.stringify(was.textContent)
+        console.log("was "+ wasString);
+        console.log("wert "+ wieviel.textContent);
 
         
 
@@ -146,13 +148,13 @@ async function addbearbeitung(event){
         localStorage.setItem("Ausstehend", ausstehendString);
         let vorhandenString = JSON.stringify(vorhanden);
         localStorage.setItem("Vorhanden", vorhandenString);*/
-    
-        updatePATCH("http://localhost:3000/Ausstehend", JSON.stringify(ausstehendObj));
-        updatePATCH("http://localhost:3000/Vorhanden", JSON.stringify(vorhandenObj));
+        console.log("updated "+ JSON.stringify(ausstehendObj));
+        await updatePATCH("http://localhost:3000/Ausstehend", JSON.stringify(ausstehendObj));
+        await updatePATCH("http://localhost:3000/Vorhanden", JSON.stringify(vorhandenObj));
 
         cluster.remove();
         //localStorage.removeItem("Bearbeiten " + id);
-        deleteBestellung("http://localhost:3000/Bearbeitungen?id="+ id);
+        await deleteBestellung("http://localhost:3000/Bearbeitungen?id="+ id);
 
         let box = document.getElementById("box");
         box.remove();
@@ -188,7 +190,7 @@ async function addbearbeitung(event){
     async function ladenCluster(event){
 
           // cluster Laden
-          console.log("Hallo");
+          console.log("Ladet cluster");
           let listeString = await requestTextWithGET("http://localhost:3000/GetBearbeitungen");
           let liste = JSON.parse(listeString);
           console.log(liste);

@@ -20,6 +20,7 @@ async function sendJSONStringWithPOST(url, jsonString) {
   }
 
 async function updatePATCH(url, jsonString) {
+
     const response = await fetch(url, {
       method: 'PATCH',
       body: jsonString,
@@ -92,8 +93,9 @@ async function addNotiz(event){
     } 
     console.log("Updated: " + ausstehend);
     ausstehendString = JSON.stringify(ausstehend);
-    updatePATCH("http://localhost:3000/Ausstehend", ausstehendString);
+    await updatePATCH("http://localhost:3000/Ausstehend", ausstehendString);
     window.location = "index.html";
+
     //let ausstehendString = JSON.stringify(ausstehend);
     //localStorage.setItem("Ausstehend", ausstehendString);
 /*
