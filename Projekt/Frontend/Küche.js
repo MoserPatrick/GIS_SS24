@@ -112,7 +112,7 @@ async function addbearbeitung(event){
         let cluster = document.getElementById("cluster" + id);
         let wasString = JSON.stringify(was.textContent)
         console.log("was "+ wasString);
-        console.log("wert "+ wieviel.textContent);
+        console.log("---------------------------------------------------------------------");
 
         
 
@@ -148,7 +148,7 @@ async function addbearbeitung(event){
         localStorage.setItem("Ausstehend", ausstehendString);
         let vorhandenString = JSON.stringify(vorhanden);
         localStorage.setItem("Vorhanden", vorhandenString);*/
-        console.log("updated "+ JSON.stringify(ausstehendObj));
+        console.log("updated "+ JSON.stringify(vorhandenObj));
         await updatePATCH("http://localhost:3000/Ausstehend", JSON.stringify(ausstehendObj));
         await updatePATCH("http://localhost:3000/Vorhanden", JSON.stringify(vorhandenObj));
 

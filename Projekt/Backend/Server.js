@@ -165,26 +165,27 @@ const server = http.createServer(async(request, response) => {
         break;
   
         case '/Vorhanden':
-          if(method != "GET"){
+          if(method === "PATCH"){
             jsonString = '';
             request.on('data', async (data) => {
               jsonString += await data;
             });
             request.on('end', async () => {
-              const objString = await jsonString
+              const objString = jsonString;
               const obj = JSON.parse(objString);
               db.run("UPDATE Auswahl SET Frühlingsrollen = ?, Frühlingsecken = ?, Wantan = ?, Muslitos = ?, PHadThai = ?, Tagesessen = ? WHERE Art = ?", [obj.Frühlingsrollen, obj.Frühlingsecken, obj.Wantan, obj.Muslitos, obj.PhadThai, obj.Tagesessen,"Vorhanden"]);
               response.end();
             });
           }
         else{// wenn GET
-          response.writeHeader(200,{'Content-Type': 'application/json'});
+         
           /*const obj = await db.get('SELECT * FROM Auswahl WHERE Art = ?', ["Vorhanden"],)
           .then(jsonString = JSON.stringify(obj))
           .then(response.write(jsonString))
           .then( console.log(jsonString));
           console.log("GET-Vorhanden ende");*/
           //response.write(jsonString);
+          response.writeHeader(200,{'Content-Type': 'application/json'});
           db.get('SELECT * FROM Auswahl WHERE Art = ?',["Vorhanden"], async (err, row) => {
               const obj = await row; // brauch ich hier await? es ging ohne
               jsonString = JSON.stringify(obj);

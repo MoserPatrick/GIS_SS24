@@ -83,12 +83,15 @@
        bestellungen();
     }
     async function abschließnotiz(event){
+        console.log("Abschließen");
         
         //let target = JSON.parse(localStorage.getItem("Bestellung " + event.target.id));
         let targetString = await requestTextWithGET("http://localhost:3000/Bestellungen?id="+ event.target.id);
+        console.log(targetString);
         let target = JSON.parse(targetString);
         
         let vorhandenString = await requestTextWithGET("http://localhost:3000/Vorhanden");
+        console.log(vorhandenString);
         let vorhanden = JSON.parse(vorhandenString);
         let ready = true;
 
@@ -112,7 +115,10 @@
 
         //localStorage.removeItem("Bestellung " + event.target.id);
         //Delete Func
-        await deleteBestellung("http://localhost:3000/Bestellungen?id=" + event.target.id);
+        
+        await deleteBestellung("http://localhost:3000/Bestellungen?id="+ event.target.id);
+
+
 
         bestellungen();
         
